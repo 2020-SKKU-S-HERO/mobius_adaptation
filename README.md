@@ -1,3 +1,17 @@
+# Mobius 플랫폼 서버 구성
+- Mobius 플랫폼은 oneM2M 표준을 따르는 IoT 서버 플랫폼으로 수평적인 포맷을 지향한다.
+
+<br>
+
+## 현재 상태
+- 아두이노 Featehr M0 에서 보낸 데이터를 모비우스 서버에서 받는다.
+- 받은 데이터들을 mysql DB에 저장한다.
+
+
+
+------
+Thanks to KETI for opening these marvelous codes. 
+
 # Mobius
 oneM2M IoT Server Platform
 
