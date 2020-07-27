@@ -67,7 +67,7 @@ var accessLogStream = fileStreamRotator.getStream({
 });
 
 // setup the logger
-app.use(morgan('combined', {stream: accessLogStream}));
+app.use(morgan('combined', { stream: accessLogStream }));
 
 //ts_app.use(morgan('short', {stream: accessLogStream}));
 
@@ -170,7 +170,7 @@ if (use_clustering) {
                     if (code === '200') {
                         if (use_secure === 'disable') {
                             http.globalAgent.maxSockets = 1000000;
-                            http.createServer(app).listen({port: usecsebaseport, agent: false}, function () {
+                            http.createServer(app).listen({ port: usecsebaseport, agent: false }, function () {
                                 console.log('mobius server (' + ip.address() + ') running at ' + usecsebaseport + ' port');
                                 cb.create(connection, function (rsp) {
                                     console.log(JSON.stringify(rsp));
@@ -187,7 +187,7 @@ if (use_clustering) {
                                 ca: fs.readFileSync('ca-crt.pem')
                             };
                             https.globalAgent.maxSockets = 1000000;
-                            https.createServer(options, app).listen({port: usecsebaseport, agent: false}, function () {
+                            https.createServer(options, app).listen({ port: usecsebaseport, agent: false }, function () {
                                 console.log('mobius server (' + ip.address() + ') running at ' + usecsebaseport + ' port');
                                 cb.create(connection, function (rsp) {
                                     console.log(JSON.stringify(rsp));
@@ -216,7 +216,7 @@ else {
 
                         if (use_secure === 'disable') {
                             http.globalAgent.maxSockets = 1000000;
-                            http.createServer(app).listen({port: usecsebaseport, agent: false}, function () {
+                            http.createServer(app).listen({ port: usecsebaseport, agent: false }, function () {
                                 console.log('mobius server (' + ip.address() + ') running at ' + usecsebaseport + ' port');
                                 require('./pxy_mqtt');
                                 //noti_mqtt_begin();
@@ -237,7 +237,7 @@ else {
                                 ca: fs.readFileSync('ca-crt.pem')
                             };
                             https.globalAgent.maxSockets = 1000000;
-                            https.createServer(options, app).listen({port: usecsebaseport, agent: false}, function () {
+                            https.createServer(options, app).listen({ port: usecsebaseport, agent: false }, function () {
                                 console.log('mobius server (' + ip.address() + ') running at ' + usecsebaseport + ' port');
                                 require('./pxy_mqtt');
                                 //noti_mqtt_begin();
@@ -335,7 +335,7 @@ global.make_json_obj = function (bodytype, str, callback) {
     try {
         if (bodytype === 'xml') {
             var message = str;
-            var parser = new xml2js.Parser({explicitArray: false});
+            var parser = new xml2js.Parser({ explicitArray: false });
             parser.parseString(message.toString(), function (err, result) {
                 if (err) {
                     console.log('[mqtt make json obj] xml2js parser error]');
@@ -489,7 +489,7 @@ global.make_json_arraytype = function (body_Obj) {
 function parse_to_json(request, response, callback) {
     if (request.usebodytype === 'xml') {
         try {
-            var parser = new xml2js.Parser({explicitArray: false});
+            var parser = new xml2js.Parser({ explicitArray: false });
             parser.parseString(request.body.toString(), function (err, result) {
                 if (err) {
                     callback('400-5');
@@ -720,7 +720,7 @@ function check_request_query_rt(request, response, callback) {
 
 
             request.ty = '17';
-            var rt_body_Obj = {req: {}};
+            var rt_body_Obj = { req: {} };
             request.headers.rootnm = 'req';
             request.bodyObj = rt_body_Obj;
             request.query.rt = 3;

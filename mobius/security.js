@@ -416,7 +416,8 @@ exports.check = function(request, response, ty, acpiList, access_value, cr, call
                 callback(code);
             });
         }
-        else if(ty == '33' || ty == '23' || ty == '4') { // cnt or sub --> check parents acpi to AE
+        //hooN add ty==6
+        else if(ty == '33' || ty == '23' || ty == '4' || ty=='6') { // cnt or sub --> check parents acpi to AE
             if (acpiList.length == 0) {
                 var targetUri = request.url.split('?')[0];
                 var targetUri_arr = targetUri.split('/');
