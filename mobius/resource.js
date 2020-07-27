@@ -46,7 +46,7 @@ var cnt_man = require('./cnt_man');
 
 var _this = this;
 
-global.ty_list = ['1', '2', '3', '4', '5', '9', '10', '13', '14', '16', '17', '23', '24', '27', '29', '30', '38', '39'];
+global.ty_list = ['1', '2', '3', '4', '5', '6', '9', '10', '13', '14', '16', '17', '23', '24', '27', '29', '30', '38', '39'];
 
 global.create_np_attr_list = {};
 create_np_attr_list.acp = ['ty', 'ri', 'pi', 'ct', 'lt', 'st'];
@@ -477,7 +477,7 @@ function create_action(request, response, callback) {
 		//var ct = parseInt(resource_Obj[rootnm].ct);
 
 		console.log("==== hooN resource Obj ty-4 : ", resource_Obj[rootnm]);
-		
+
                 db_sql.update_parent_by_insert(request.connection, targetObject[parent_rootnm], cs, function () {
                     //request_update_cnt(JSON.stringify(targetObject), cs);
 		    //console.log("==== hooN request.connection : ", request.connection);
@@ -516,7 +516,7 @@ function create_action(request, response, callback) {
 		//var ct = parseInt(resource_Obj[rootnm].ct);
 
 		console.log("==== hooN resource Obj ty-6 : ", resource_Obj[rootnm]);
-		
+
                 db_sql.update_parent_by_insert(request.connection, targetObject[parent_rootnm], cs, function () {
                     //request_update_cnt(JSON.stringify(targetObject), cs);
 		    //console.log("==== hooN request.connection : ", request.connection);
