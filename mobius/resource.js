@@ -1022,6 +1022,11 @@ function build_resource(request, response, callback) {
                 callback(code);
             });
             break;
+        case '6':
+            cin.build_cin(request, response, resource_Obj, body_Obj, function (code) {
+                callback(code);
+            });
+           break;
         case '9':
             grp.build_grp(request, response, resource_Obj, body_Obj, function (code) {
                 callback(code);
