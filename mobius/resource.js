@@ -462,9 +462,9 @@ function create_action(request, response, callback) {
         });
     }
 
-/*
+
 //dg52316
- else if (ty == '4') {
+ else if (ty == '6') {
         // 20180322 removed <-- update stateTag for every resources
         var parent_rootnm = Object.keys(request.targetObject)[0];
         resource_Obj[rootnm].st = parseInt(request.targetObject[parent_rootnm].st, 10) + 1;
@@ -479,7 +479,7 @@ function create_action(request, response, callback) {
                 var con = parseInt(resource_Obj[rootnm].con);
                 //var ct = parseInt(resource_Obj[rootnm].ct);
 
-                console.log("==== hooN resource Obj : ", resource_Obj[rootnm]);
+                console.log("==== hooN resource Obj ty-6 : ", resource_Obj[rootnm]);
 
                 db_sql.update_parent_by_insert(request.connection, targetObject[parent_rootnm], cs, function () {
                     //request_update_cnt(JSON.stringify(targetObject), cs);
@@ -501,7 +501,7 @@ callback('500-4');
 }
 });
 }
-*/
+
 
     else if (ty == '4') {
         // 20180322 removed <-- update stateTag for every resources
@@ -518,7 +518,7 @@ callback('500-4');
 		var con = parseInt(resource_Obj[rootnm].con);
 		//var ct = parseInt(resource_Obj[rootnm].ct);
 
-		console.log("==== hooN resource Obj : ", resource_Obj[rootnm]);
+		console.log("==== hooN resource Obj ty-4 : ", resource_Obj[rootnm]);
 		
                 db_sql.update_parent_by_insert(request.connection, targetObject[parent_rootnm], cs, function () {
                     //request_update_cnt(JSON.stringify(targetObject), cs);
