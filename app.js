@@ -107,6 +107,8 @@ function del_expired_resource() {
     });
 }
 
+require('./python/db_modify.js');
+
 var cluster = require('cluster');
 var os = require('os');
 //var cpuCount = (os.cpus().length / 2);
