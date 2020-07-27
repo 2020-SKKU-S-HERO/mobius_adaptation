@@ -238,7 +238,7 @@ exports.insert_data = function(connection, obj, callback) {
     console.time('insert_data ' + obj.ri);
     _this.insert_data(connection, obj, function (err, results) {
         if(!err) {
-            var sql = util.format('insert into data (ri, con, ct)' +
+            var sql = util.format('insert into data (ri, data, ct)' +
                 'value (\'%s\', \'%s\', \'%s\')',
                 obj.ri, obj.con,obj.ct);
             db.getResult(sql, connection, function (err, results) {

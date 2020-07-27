@@ -770,6 +770,7 @@ var typeRsrc = {
     "3": "cnt",
     "4": "cin",
     "5": "cb",
+    "6": "data",
     "9": "grp",
     "10": "lcp",
     "13": "mgo",

@@ -461,6 +461,48 @@ function create_action(request, response, callback) {
             }
         });
     }
+
+/*
+//dg52316
+ else if (ty == '4') {
+        // 20180322 removed <-- update stateTag for every resources
+        var parent_rootnm = Object.keys(request.targetObject)[0];
+        resource_Obj[rootnm].st = parseInt(request.targetObject[parent_rootnm].st, 10) + 1;
+        request.targetObject[parent_rootnm].st = resource_Obj[rootnm].st;
+        // db_sql.update_st(request.connection, request.targetObject[parent_rootnm], function() {
+        // });
+
+        db_sql.insert_cin(request.connection, resource_Obj[rootnm], function (err, results) {
+            if (!err) {
+                var targetObject = JSON.parse(JSON.stringify(request.targetObject));
+                var cs = parseInt(resource_Obj[rootnm].cs);
+                var con = parseInt(resource_Obj[rootnm].con);
+                //var ct = parseInt(resource_Obj[rootnm].ct);
+
+                console.log("==== hooN resource Obj : ", resource_Obj[rootnm]);
+
+                db_sql.update_parent_by_insert(request.connection, targetObject[parent_rootnm], cs, function () {
+                    //request_update_cnt(JSON.stringify(targetObject), cs);
+                    cnt_man.put(request.connextion,JSON.stringify(targetObject));
+                    targetObject = null;
+                });
+
+rewults = null;
+callback('200');
+}
+else{
+if(results.code == 'ER_DUP_ENTRY'){
+callback('409-5');
+}
+else{
+console.log('[create_action] create resouce error=======' + results.code);
+callback('500-4');
+}
+}
+});
+}
+*/
+
     else if (ty == '4') {
         // 20180322 removed <-- update stateTag for every resources
         var parent_rootnm = Object.keys(request.targetObject)[0];
@@ -473,9 +515,14 @@ function create_action(request, response, callback) {
             if (!err) {
                 var targetObject = JSON.parse(JSON.stringify(request.targetObject));
                 var cs = parseInt(resource_Obj[rootnm].cs);
+		var con = parseInt(resource_Obj[rootnm].con);
+		//var ct = parseInt(resource_Obj[rootnm].ct);
 
+		console.log("==== hooN resource Obj : ", resource_Obj[rootnm]);
+		
                 db_sql.update_parent_by_insert(request.connection, targetObject[parent_rootnm], cs, function () {
                     //request_update_cnt(JSON.stringify(targetObject), cs);
+		    //console.log("==== hooN request.connection : ", request.connection);
 
                     cnt_man.put(request.connection, JSON.stringify(targetObject));
                     targetObject = null;

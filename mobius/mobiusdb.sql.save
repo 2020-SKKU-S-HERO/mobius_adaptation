@@ -101,7 +101,7 @@ DROP TABLE IF EXISTS `data`;
 SET character_set_client = utf8mb4 ;
 CREATE TABLE `data` (
 `ri` varchar(200) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
-`data` longtext NOT NULL,
+`data` longtext,
 `ct` varchar(200) NOT NULL,
 PRIMARY KEY(`ct`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
