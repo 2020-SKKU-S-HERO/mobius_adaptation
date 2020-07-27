@@ -1,7 +1,7 @@
 
-var PythonShell = require('python-shell');
+let {PythonShell} = require('python-shell');
 
-var options = {
+let options = {
     mode: 'text',
     pythonPath : '',
     pythonOptions: ['-u'],
@@ -9,8 +9,19 @@ var options = {
     args: ['value1', 'value2', 'vlaue3']   
 };
 
-PythonShell.run('test.py', options, function(err, results){
+PythonShell.run(__dirname+'\\test.py', options, function(err, results){
     if(err) throw err;
 
-    console.log('results: %j", results');
-})
+    console.log('results: %j', results);
+
+});
+
+/*
+PythonShell.end(function(err, code, signal){
+    if(err) throw err;
+
+    console.log('The exit code was : ' + code);
+    console.log('The exit signal was: '+ signal);
+    console.log("end of python shell");
+});
+*/
