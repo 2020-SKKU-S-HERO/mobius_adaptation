@@ -2777,7 +2777,7 @@ function scheduleDB() {
     // tweak this based on your app's memory usage
     var nextMinutes = 1;
     const db_update = require('./database/db_update.js');
-    db_update.get_from_mobius();
+    db_update.mobius_to_shero();
 
     setTimeout(function () {    
         scheduleDB();
