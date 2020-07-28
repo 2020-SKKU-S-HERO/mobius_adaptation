@@ -23,11 +23,13 @@ var mysql_pool = null;
 
 exports.connect = function (host, port, user, password, callback) {
 
+    /*
     console.log("************hooN db option printing : "+host);
     console.log("************hooN db option printing : "+port);
     console.log("************hooN db option printing : "+user);
     console.log("************hooN db option printing : "+password);
-
+    */
+   
     mysql_pool = mysql.createPool({
         host: host,
         port: port,
