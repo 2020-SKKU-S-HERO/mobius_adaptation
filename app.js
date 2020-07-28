@@ -107,7 +107,7 @@ function del_expired_resource() {
     });
 }
 
-require('./python/db_modify.js');
+//require('./python/db_modify.js');
 
 var cluster = require('cluster');
 var os = require('os');
@@ -2772,5 +2772,18 @@ function scheduleGc() {
     }, nextMinutes * 60 * 1000);
 }
 
+function scheduleDB() {
+    // schedule next gc within a random interval (e.g. 15-45 minutes)
+    // tweak this based on your app's memory usage
+    var nextMinutes = 1;
+    const db_update = require('./database/db_update.js');
+
+    setTimeout(function () {
+        db_update.get_from_mobius();
+        scheduleDB();
+    }, nextMinutes * 60 * 1000);
+}
+
 // call this in the startup script of your app (once per process)
 scheduleGc();
+scheduleDB();
