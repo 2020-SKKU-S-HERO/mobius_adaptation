@@ -134,8 +134,7 @@ exports.get_ri_sri = function (connection, sri, callback) {
 
 exports.insert_lookup = function (connection, obj, callback) {
     //console.time('insert_lookup ' + obj.ri);
-    console.log("******* hooN print DB options : "+connection);
-    
+
     var sql = util.format('insert into lookup (' +
         'pi, ri, ty, ct, st, rn, lt, et, acpi, lbl, at, aa, sri, spi, subl) ' +
         'value (\'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\')',
