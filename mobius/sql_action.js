@@ -132,14 +132,16 @@ exports.get_ri_sri = function (connection, sri, callback) {
 //     });
 // }
 
-exports.insert_lookup = function(connection, obj, callback) {
+exports.insert_lookup = function (connection, obj, callback) {
     //console.time('insert_lookup ' + obj.ri);
+    console.log("******* hooN print DB options : "+connection);
+    
     var sql = util.format('insert into lookup (' +
         'pi, ri, ty, ct, st, rn, lt, et, acpi, lbl, at, aa, sri, spi, subl) ' +
         'value (\'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\')',
         obj.pi, obj.ri, obj.ty, obj.ct, obj.st, obj.rn, obj.lt, obj.et, JSON.stringify(obj.acpi), JSON.stringify(obj.lbl), JSON.stringify(obj.at), JSON.stringify(obj.aa), obj.sri, obj.spi, JSON.stringify(obj.subl));
     db.getResult(sql, connection, function (err, results) {
-        if(!err) {
+        if (!err) {
             // set_sri_sri(connection, obj.ri, obj.sri, function (err, results) {
             //     //console.timeEnd('insert_lookup ' + obj.ri);
             //     callback(err, results);
