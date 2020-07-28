@@ -2,24 +2,20 @@ let mysql = require('mysql');
 let os = require('os');
 
 const mobius_connInfo = {
-    dev : {
-        host : 'localhost',
-        port : '3306',
-        user : 'root',
-        password : 'shero',
-        database : 'mobius',
-        multipleStatements : true
-    }
+    host: 'localhost',
+    port: '3306',
+    user: 'root',
+    password: 'shero',
+    database: 'mobius',
+    multipleStatements: true
 }
 
 const ourdb_connInfo = {
-    dev : {
-        host : 'localhost',
-        port : '3306',
-        user : 'root',
-        password : 'shero',
-        database : 'sheroDB'
-    }
+    host: 'localhost',
+    port: '3306',
+    user: 'root',
+    password: 'shero',
+    database: 'sheroDB'
 }
 
 exports.get_from_mobius = function(){
