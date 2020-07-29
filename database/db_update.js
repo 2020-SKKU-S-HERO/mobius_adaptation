@@ -1,5 +1,6 @@
 let mysql = require('mysql');
 let os = require('os');
+const { sendAcksForNonConfirmablePackets } = require('coap/lib/parameters');
 
 const mobius_connInfo = {
     host: 'localhost',
@@ -19,7 +20,7 @@ const ourdb_connInfo = {
     multipleStatements: true
 }
 
-global.time_to_mili = function(date){
+global.select_via_time = function(date, callback){
     const hour = 3600000;
     const minute = 60000;
     const seconds = 1000;
@@ -46,7 +47,7 @@ global.time_to_mili = function(date){
     
     res = String(year)+month+day+res_milsec
     let sql = 'SELECT ri, con, cr FROM cin WHERE right(ri, 17) > '+ res;
-    return sql;
+    callback(sql);
 };
 /*
 global.mili_to_time = function(time){
@@ -58,21 +59,23 @@ exports.mobius_to_shero = function(){
     let ourdb_connection = mysql.createConnection(ourdb_connInfo);
     mobius_connection.connect();
     ourdb_connection.connect();
-    
-    let sql = ''; 
 
     ourdb_connection.query('SELECT MAX(date_time) from co2_emissions', function(error, results, fields){
         if(error) throw error;
 
-        sql = time_to_mili(results);
-        console.log('======== hooN : ', sql);
+        select_via_time(results, function(sql){
+            console.log('=================sql : ', sql);
+            mobius_connection.query(sql, function(error, results, fields){
+                if(error) throw error;
+                console.log('========== The results is: ', results);
+            });
+            //results 가공
+
+        });
     });
     
-    mobius_connection.query(sql, function(error, results, fields){
-        if(error) throw error;
-        //console.log('========== The results is: ', results);
-    });
-    
+    }
+ 
     ourdb_connection.end();
     mobius_connection.end();
 };
