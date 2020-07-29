@@ -22,12 +22,12 @@ const ourdb_connInfo = {
 
 global.sendDataToShero = function(data){
     let ourdb_connection = mysql.createConnection(ourdb_connInfo);
-    console.log('DATaA:::::::::::::::::::::::$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$4',data[0].ri);
-/*
-    ourdb_connection.query(, function(error, results, fields){
-        if(error) throw error;
 
-    });*/
+
+    ourdb_connection.query('insert into co2_emissions(emissions,location) values(data[0].con,data[0].cr)', function(error, results, fields){
+        if(error) throw error;
+        console.log('DATaA:::::::::::::::::::::::$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$',results);
+    });
 
     ourdb_connection.end();
 }
