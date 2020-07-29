@@ -20,11 +20,13 @@ const ourdb_connInfo = {
     multipleStatements: true
 }
 
-global.sendDataToShero = function(data){
+global.writeDataToShero = function(data){
     let ourdb_connection = mysql.createConnection(ourdb_connInfo);
+    let sql = ''
+    
+    console.log('DATE::::::::::::::::::::::::::::::::::::::::::::::::::::::::::', data[0].ri.split('-')[1]);
 
-    let sql = 'insert into co2_emissions(date_time,emissions,location) values('+'\''+ '2020-07-31 05:03:00' + '\''+ ','+ String(data[0].con) + ',' + '\''+ String(data[0].cr) +'\'' + ')';
-    console.log('DATaA:::::::::::::::::::::::$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$',sql);
+    sql = 'insert into co2_emissions(date_time,emissions,location) values('+'\''+ '2020-07-31 05:03:00' + '\''+ ','+ String(data[0].con) + ',' + '\''+ String(data[0].cr) +'\'' + ')';
     ourdb_connection.query(sql, function(error, results, fields){
         if(error) throw error;
         console.log('Successss:::::::::::::::::::::::$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$',results);
@@ -64,7 +66,7 @@ global.getDataFromMobius = function(date){
 
     mobius_connection.query(sql, function(error, results, fields){
         console.log("======================before results : ", results);
-        sendDataToShero(results);
+        writeDataToShero(results);
     });
     mobius_connection.end();
 };
