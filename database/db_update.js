@@ -22,17 +22,26 @@ const ourdb_connInfo = {
 
 global.writeDataToShero = function(data){
     let ourdb_connection = mysql.createConnection(ourdb_connInfo);
-    let sql = ''
-    
-    let time = data[0].ri.split('-')[1];
-    let year = time.substring(0, 4);    let month = time.substring(4, 6);
-    let date = time.substring(6, 8);    let second = time.substring(8, 17);
+    let sql = '';
+    const hour = 3600000;
+    const minute = 60000;
+    const seconds = 1000;
+    let time, year, month, date, mil_second, hou, min, sec;
+
+    time = data[0].ri.split('-')[1];
+    year = time.substring(0, 4);    month = time.substring(4, 6);
+    date = time.substring(6, 8);    mil_second = Number(time.substring(8, 17));
+
+    hou = parseInt(second / hour);  mil_second = mil_second % hour;
+    min = parseInt(second / minute);    mil_second = mil_second % minute;
+    sec = parseInt(second / seconds);   mil_second = mil_second % seconds;
+
 
     console.log('Time ::::::::::::::::::::::::::::::::::::::::::::::::::::::::', time);
-    console.log('Year ::::::::::::::::::::::::::::::::::::::::::::::::::::::::', year);
-    console.log('Month ::::::::::::::::::::::::::::::::::::::::::::::::::::::::', month);
-    console.log('Date ::::::::::::::::::::::::::::::::::::::::::::::::::::::::', date);
-    console.log('Second ::::::::::::::::::::::::::::::::::::::::::::::::::::::::', second);
+    console.log('Hou ::::::::::::::::::::::::::::::::::::::::::::::::::::::::', hou);
+    console.log('Min ::::::::::::::::::::::::::::::::::::::::::::::::::::::::', min);
+    console.log('Sec ::::::::::::::::::::::::::::::::::::::::::::::::::::::::', sec);
+    console.log('Mil_Second ::::::::::::::::::::::::::::::::::::::::::::::::::::::::', mil_second);
 
     sql = 'insert into co2_emissions(date_time,emissions,location) values('+'\''+ '2020-07-31 05:03:00' + '\''+ ','+ String(data[0].con) + ',' + '\''+ String(data[0].cr) +'\'' + ')';
     ourdb_connection.query(sql, function(error, results, fields){
