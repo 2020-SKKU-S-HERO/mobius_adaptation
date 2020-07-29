@@ -59,7 +59,7 @@ exports.mobius_to_shero = function(){
         if(error) throw error;
 
         mil_time = time_to_mili(results);
-        console.log('======== hooN : ', time);
+        console.log('======== hooN : ', mil_time);
     });
 
     let sql = 'SELECT ri, con, cr FROM cin WHERE right(ri, 17) > '+ mil_time;
