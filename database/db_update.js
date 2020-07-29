@@ -24,6 +24,7 @@ global.time_to_mili = function(date){
     const minute = 60000;
     const seconds = 1000;
 
+    date = Date(date)
     date = new Date(date);
     console.log('************** date : ', date);
 
