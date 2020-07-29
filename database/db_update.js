@@ -60,17 +60,17 @@ exports.mobius_to_shero = function(){
     //mobius_connection.connect();
     //ourdb_connection.connect();
 
-    let sql = ''
     ourdb_connection.query('SELECT MAX(date_time) from co2_emissions', function(error, results, fields){
         if(error) throw error;
-
-        result = select_via_time(results, function(sql){
+        
+        console.log('===================== results : ', results);
+        select_via_time(results, function(sql){
+            console.log('=============== sql : ', sql);
             mobius_connection.query(sql, function(error, results, fields){
                 console.log("======================before results : ", results);
-                return results;
             }); 
+            console.log("22222222222222222222 results : ", results);
         });
-        console.log("=====================================result: ", result);
     });
      
  
