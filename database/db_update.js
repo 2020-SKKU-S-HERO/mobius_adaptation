@@ -34,12 +34,17 @@ global.time_to_mili = function(date){
 
     res_milsec = hou*hour + min*minute + sec*seconds + milsec;
     res_milsec = String(res_milsec);
+    month = String(month);
+    day = String(day);
+
+    if(month.length==1) month='0'+month;
+    if(day.length==1) day='0'+day;
 
     for(var i=res_milsec.length; i<9; i++){
         res_milsec = '0'+res_milsec;
     }
     
-    res = String(year)+String(month)+String(day)+res_milsec
+    res = String(year)+month+day+res_milsec
     return res;
 };
 /*
