@@ -24,10 +24,11 @@ global.sendDataToShero = function(data){
     let ourdb_connection = mysql.createConnection(ourdb_connInfo);
 
     let sql = 'insert into co2_emissions(date_time,emissions,location) values('+"2020-07-31"+','+ String(data[0].con) + ',' + String(data[0].cr) + ')';
-    ourdb_connection.query(sql, function(error, results, fields){
+  console.log('DATaA:::::::::::::::::::::::$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$',sql);
+    /*ourdb_connection.query(sql, function(error, results, fields){
         if(error) throw error;
         console.log('DATaA:::::::::::::::::::::::$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$',results);
-    });
+    });*/
 
     ourdb_connection.end();
 }
