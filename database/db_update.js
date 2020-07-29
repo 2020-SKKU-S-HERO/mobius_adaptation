@@ -66,14 +66,13 @@ exports.mobius_to_shero = function(){
 
         result = select_via_time(results, function(sql){
             mobius_connection.query(sql, function(error, results, fields){
+                console.log("======================before results : ", results);
                 return results;
             }); 
         });
-
-
+        console.log("=====================================result: ", result);
     });
-            //results 가공
-
+     
  
     ourdb_connection.end();
     mobius_connection.end();
