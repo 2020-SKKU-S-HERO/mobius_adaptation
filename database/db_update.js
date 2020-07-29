@@ -55,6 +55,8 @@ global.getDataFromMobius = function(result){
     let mobius_connection = mysql.createConnection(mobius_connInfo);
 
     date = Date(result[0].time)
+    console.log('&&&&&&&&&& GET DATA FROM MOBIUS date : ', date);
+    console.log('\n');
     date = new Date(date);
 
     year = String(date.getFullYear());  month = String(date.getMonth()+1);
