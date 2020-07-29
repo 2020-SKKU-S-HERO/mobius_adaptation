@@ -43,6 +43,7 @@ global.writeDataToShero = function(data){
             }
             else{
                 console.log('Successss::::::::::::::::::::::', sql);
+                console.log('\n');
             }
         });
     }
@@ -73,12 +74,14 @@ global.getDataFromMobius = function(date){
     let sql = 'SELECT ri, con, cr FROM cin WHERE right(ri, 17) > '+ res;
 
     mobius_connection.query(sql, function(error, results, fields){
-        if(error){
+        if(!results){
             console.log('====================================== MOBIUS DATA NULL');
         }
         else{
             console.log('SUCCESS on get Data From Mobius *****************************', sql);
+            console.log('\n');
             console.log('----------------------------- DATA FROM MOIBUS : ', results);
+            console.log('\n');
             writeDataToShero(results);
         }
     });
@@ -94,6 +97,7 @@ exports.mobius_to_shero = function(){
         if(error)throw error;
         else{
             console.log('===================== results : ', results);
+            console.log('\n');
             getDataFromMobius(results);
         }
     });
