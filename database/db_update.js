@@ -28,6 +28,7 @@ global.writeDataToShero = function(data){
     let year = time.substring(0, 4);    let month = time.substring(4, 6);
     let date = time.substring(6, 8);    let second = time.substring(8, 17);
 
+    console.log('Time ::::::::::::::::::::::::::::::::::::::::::::::::::::::::', time);
     console.log('Year ::::::::::::::::::::::::::::::::::::::::::::::::::::::::', year);
     console.log('Month ::::::::::::::::::::::::::::::::::::::::::::::::::::::::', month);
     console.log('Date ::::::::::::::::::::::::::::::::::::::::::::::::::::::::', date);
