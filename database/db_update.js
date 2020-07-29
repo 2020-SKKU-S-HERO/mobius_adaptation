@@ -24,6 +24,7 @@ global.time_to_mili = function(date){
     const minute = 60000;
     const seconds = 1000;
 
+    date = new Date(date);
     console.log('************** date : ', date);
 
     year = date.getFullYear();  month = date.getMonth()+1;
@@ -56,9 +57,8 @@ exports.mobius_to_shero = function(){
         if(error) throw error;
 
         console.log('********************* results get Full Year : ', results);
-        console.log('********************* results get Full Year : ', Date(results));
         
-        time = time_to_mili(Date(results));
+        time = time_to_mili(results);
         console.log('======== hooN : ', time);
     });
 
