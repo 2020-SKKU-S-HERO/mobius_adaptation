@@ -26,7 +26,6 @@ global.time_to_mili = function(date){
 
     date = Date(date)
     date = new Date(date);
-    console.log('************** date : ', date);
 
     year = date.getFullYear();  month = date.getMonth()+1;
     day = date.getDate();   hou = date.getHours();
@@ -53,22 +52,21 @@ exports.mobius_to_shero = function(){
     let ourdb_connection = mysql.createConnection(ourdb_connInfo);
     mobius_connection.connect();
     ourdb_connection.connect();
+    
+    let mil_time = 0; 
 
     ourdb_connection.query('SELECT MAX(date_time) from co2_emissions', function(error, results, fields){
         if(error) throw error;
 
-        console.log('********************* results get Full Year : ', results);
-        
-        time = time_to_mili(results);
+        mil_time = time_to_mili(results);
         console.log('======== hooN : ', time);
     });
 
-    /*
-    mobius_connection.query('SELECT * FROM cin', function(error, results, fields){
+    let sql = 'SELECT ri, con, cr FROM cin WHERE right(ri, 17) > '+ mil_time;
+    mobius_connection.query(sql, function(error, results, fields){
         if(error) throw error;
         console.log('========== The results is: ', results);
     });
-    */
     
     ourdb_connection.end();
     mobius_connection.end();
