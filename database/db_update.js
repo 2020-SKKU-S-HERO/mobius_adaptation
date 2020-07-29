@@ -52,6 +52,7 @@ global.select_via_time = function(date){
     mobius_connection.query(sql, function(error, results, fields){
         console.log("======================before results : ", results);
     });
+    mobius_connection.end();
     return results;
 };
 /*
@@ -74,5 +75,4 @@ exports.mobius_to_shero = function(){
 
 
     ourdb_connection.end();
-    mobius_connection.end();
 };
