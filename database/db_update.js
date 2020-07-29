@@ -90,8 +90,8 @@ global.getDataFromMobius = function(result){
             console.log('');
             console.log('-------------------------------DATA LENGTH : ', results.length);
             console.log('');
-
-            writeDataToShero(results);
+            if(results.length > 0)
+                writeDataToShero(results);
         }
     });
     mobius_connection.end();
