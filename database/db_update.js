@@ -32,7 +32,7 @@ global.time_to_mili = function(date){
     res_milsec = hou*hour + min*minute + sec*seconds + milsec;
     res_milsec = String(res_milsec);
 
-    for(var i=res_milsec.length; i<8; i++){
+    for(var i=res_milsec.length; i<9; i++){
         res_milsec = '0'+res_milsec;
     }
     
@@ -52,6 +52,7 @@ exports.mobius_to_shero = function(){
 
     ourdb_connection.query('SELECT MAX(date_time) from co2_emissions', function(error, results, fields){
         if(error) throw error;
+        console.log('********************* results get Full Year : ', results.getFullYear());
 
         time = time_to_mili(results);
         console.log('======== hooN : ', time);
