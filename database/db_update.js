@@ -29,7 +29,7 @@ global.writeDataToShero = function(data){
     let time, year, month, date, mil_second, hou, min, sec;
 
     for(var i=0; i<data.length; i++){
-        time = data[0].ri.split('-')[1];
+        time = data[i].ri.split('-')[1];
         year = time.substring(0, 4);    month = time.substring(4, 6);
         date = time.substring(6, 8);    mil_second = Number(time.substring(8, 17));
 
