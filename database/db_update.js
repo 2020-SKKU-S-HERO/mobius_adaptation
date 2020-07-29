@@ -24,7 +24,14 @@ global.writeDataToShero = function(data){
     let ourdb_connection = mysql.createConnection(ourdb_connInfo);
     let sql = ''
     
-    console.log('DATE::::::::::::::::::::::::::::::::::::::::::::::::::::::::::', data[0].ri.split('-')[1]);
+    let time = data[0].ri.split('-')[1];
+    let year = time.substring(0, 4);    let month = time.substring(4, 6);
+    let date = time.substring(6, 8);    let second = time.substring(8, 17);
+
+    console.log('Year ::::::::::::::::::::::::::::::::::::::::::::::::::::::::', year);
+    console.log('Month ::::::::::::::::::::::::::::::::::::::::::::::::::::::::', month);
+    console.log('Date ::::::::::::::::::::::::::::::::::::::::::::::::::::::::', date);
+    console.log('Second ::::::::::::::::::::::::::::::::::::::::::::::::::::::::', second);
 
     sql = 'insert into co2_emissions(date_time,emissions,location) values('+'\''+ '2020-07-31 05:03:00' + '\''+ ','+ String(data[0].con) + ',' + '\''+ String(data[0].cr) +'\'' + ')';
     ourdb_connection.query(sql, function(error, results, fields){
