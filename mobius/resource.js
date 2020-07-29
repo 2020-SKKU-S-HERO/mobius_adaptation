@@ -476,7 +476,7 @@ function create_action(request, response, callback) {
                 var con = parseInt(resource_Obj[rootnm].con);
                 //var ct = parseInt(resource_Obj[rootnm].ct);
 
-                console.log("==== hooN resource Obj ty-4 : ", resource_Obj[rootnm]);
+                console.log("==== hooN resource Obj ty-4 : ", resource_Obj[rootnm].ri);
 
                 db_sql.update_parent_by_insert(request.connection, targetObject[parent_rootnm], cs, function () {
                     //request_update_cnt(JSON.stringify(targetObject), cs);
