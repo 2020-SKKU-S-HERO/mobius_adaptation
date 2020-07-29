@@ -32,9 +32,9 @@ global.writeDataToShero = function(data){
     year = time.substring(0, 4);    month = time.substring(4, 6);
     date = time.substring(6, 8);    mil_second = Number(time.substring(8, 17));
 
-    hou = parseInt(second / hour);  mil_second = mil_second % hour;
-    min = parseInt(second / minute);    mil_second = mil_second % minute;
-    sec = parseInt(second / seconds);   mil_second = mil_second % seconds;
+    hou = parseInt(mil_second / hour);  mil_second = mil_second % hour;
+    min = parseInt(mil_second / minute);    mil_second = mil_second % minute;
+    sec = parseInt(mil_second / seconds);   mil_second = mil_second % seconds;
 
 
     console.log('Time ::::::::::::::::::::::::::::::::::::::::::::::::::::::::', time);
