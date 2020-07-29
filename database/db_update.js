@@ -22,7 +22,7 @@ const ourdb_connInfo = {
 
 global.sendDataToShero = function(data){
     let ourdb_connection = mysql.createConnection(ourdb_connInfo);
-    console.log('DATaA:::::::::::::::::::::::',data);
+    console.log('DATaA:::::::::::::::::::::::$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$4',data[0].ri);
 /*
     ourdb_connection.query(, function(error, results, fields){
         if(error) throw error;
