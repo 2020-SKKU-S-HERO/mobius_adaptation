@@ -28,24 +28,26 @@ global.writeDataToShero = function(data){
     const seconds = 1000;
     let time, year, month, date, mil_second, hou, min, sec;
 
-    time = data[0].ri.split('-')[1];
-    year = time.substring(0, 4);    month = time.substring(4, 6);
-    date = time.substring(6, 8);    mil_second = Number(time.substring(8, 17));
+    for(var i=0; i<data.length; i++){
+        time = data[0].ri.split('-')[1];
+        year = time.substring(0, 4);    month = time.substring(4, 6);
+        date = time.substring(6, 8);    mil_second = Number(time.substring(8, 17));
 
-    console.log('Time :::::::::::::::::::::::::::::::', time);
-    hou = String(parseInt(mil_second / hour));  mil_second = mil_second % hour;
-    min = String(parseInt(mil_second / minute));    mil_second = mil_second % minute;
-    sec = parseInt(mil_second / seconds);   mil_second = mil_second % seconds;
+        hou = String(parseInt(mil_second / hour));  mil_second = mil_second % hour;
+        min = String(parseInt(mil_second / minute));    mil_second = mil_second % minute;
+        sec = parseInt(mil_second / seconds);   mil_second = mil_second % seconds;
 
-    if(hou.length==1) hou ='0'+hou;
-    if(min.length==1) min = '0'+min;
+        if(hou.length==1) hou ='0'+hou;
+        if(min.length==1) min = '0'+min;
 
-    time = year + '-' + month + '-' + date + ' ' + hou + ':' + min + ':' + String(sec)
-    sql = 'insert into co2_emissions(date_time,emissions,location) values('+'\''+ time + '\''+ ','+ String(data[0].con) + ',' + '\''+ String(data[0].cr) +'\'' + ')';
-    ourdb_connection.query(sql, function(error, results, fields){
-        if(error) throw error;
-        console.log('Successss:::::::::::::::::::::::$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$',results);
-    });
+        time = year + '-' + month + '-' + date + ' ' + hou + ':' + min + ':' + String(sec)
+        sql = 'insert into co2_emissions(date_time,emissions,location) values('+'\''+ time + '\''+ ','+ String(data[0].con) + ',' + '\''+ String(data[0].cr) +'\'' + ')';
+
+        ourdb_connection.query(sql, function(error, results, fields){
+            if(error) throw error;
+            console.log('Successss::::::::::::::::::::::', sql);
+        });
+    }
 
     ourdb_connection.end();
 }
@@ -80,22 +82,15 @@ global.getDataFromMobius = function(date){
     let sql = 'SELECT ri, con, cr FROM cin WHERE right(ri, 17) > '+ res;
 
     mobius_connection.query(sql, function(error, results, fields){
-        console.log("======================before results : ", results);
         writeDataToShero(results);
     });
     mobius_connection.end();
 };
-/*
-global.mili_to_time = function(time){
-
-};
-*/
 
 exports.mobius_to_shero = function(){
     let ourdb_connection = mysql.createConnection(ourdb_connInfo);
     //mobius_connection.connect();
     //ourdb_connection.connect();
-    finalResult = '';
 
     ourdb_connection.query('SELECT MAX(date_time) from co2_emissions', function(error, results, fields){
         if(error) throw error;
