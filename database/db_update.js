@@ -19,21 +19,42 @@ const ourdb_connInfo = {
     multipleStatements: true
 }
 
+global.time_to_mili = function(date){
+    const hour = 3600000;
+    const minute = 60000;
+    const seconds = 1000;
+
+    year = date.getFullYear();  month = date.getMonth()+1;
+    day = date.getDate();   hou = date.getHours();
+    min = date.getMinutes();    sec = date.getMinutes();
+    milsec = date.getMilliseconds();
+
+    res_milsec = hou*hour + min*minute + sec*seconds + milsec;
+    res_milsec = String(res_milsec);
+
+    for(var i=res_milsec.length; i<8; i++){
+        res_milsec = '0'+res_milsec;
+    }
+    
+    res = String(year)+String(month)+String(day)+res_milsec
+    return res;
+};
+/*
+global.mili_to_time = function(time){
+
+};
+*/
 exports.mobius_to_shero = function(){
     let mobius_connection = mysql.createConnection(mobius_connInfo);
     let ourdb_connection = mysql.createConnection(ourdb_connInfo);
     mobius_connection.connect();
     ourdb_connection.connect();
 
-    const hour = 3600000;
-    const minute = 60000;
-    const seconds = 1000;
-    
     ourdb_connection.query('SELECT MAX(date_time) from co2_emissions', function(error, results, fields){
         if(error) throw error;
-        max_time = results;
-        console.log("========== The max_time is : ", max_time);
-        console.log("========== The type of max_time is : ", typeof(max_time));
+
+        time = time_to_mili(results);
+        console.log('======== hooN : ', time);
     });
 
     /*
