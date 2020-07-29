@@ -68,9 +68,11 @@ exports.mobius_to_shero = function(){
     });
 
     let sql = 'SELECT ri, con, cr FROM cin WHERE right(ri, 17) > '+ mil_time;
+    console.log('***************** sql : ', sql);
+
     mobius_connection.query(sql, function(error, results, fields){
         if(error) throw error;
-        console.log('========== The results is: ', results);
+        //console.log('========== The results is: ', results);
     });
     
     ourdb_connection.end();
