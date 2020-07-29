@@ -20,7 +20,7 @@ const ourdb_connInfo = {
     multipleStatements: true
 }
 
-global.select_via_time = function(date, callback){
+global.select_via_time = function(date){
     const hour = 3600000;
     const minute = 60000;
     const seconds = 1000;
@@ -44,10 +44,14 @@ global.select_via_time = function(date, callback){
     for(var i=res_milsec.length; i<9; i++){
         res_milsec = '0'+res_milsec;
     }
-    
+
     res = String(year)+month+day+res_milsec
     let sql = 'SELECT ri, con, cr FROM cin WHERE right(ri, 17) > '+ res;
-    callback(sql);
+
+    mobius_connection.query(sql, function(error, results, fields){
+        console.log("======================before results : ", results);
+    });
+    return results;
 };
 /*
 global.mili_to_time = function(time){
@@ -57,25 +61,18 @@ global.mili_to_time = function(time){
 exports.mobius_to_shero = function(){
     let mobius_connection = mysql.createConnection(mobius_connInfo);
     let ourdb_connection = mysql.createConnection(ourdb_connInfo);
-    mobius_connection.connect();
+    //mobius_connection.connect();
     //ourdb_connection.connect();
 
     ourdb_connection.query('SELECT MAX(date_time) from co2_emissions', function(error, results, fields){
         if(error) throw error;
-        
+
         console.log('===================== results : ', results);
-        select_via_time(results, function(sql_time){
-            console.log('=============== sql : ', sql_time);
-            //console.log('==================mobius_connection: ', mobius_connection);
-            mobius_connection.query(String(sql_time), function(error, results, fields){
-                console.log("======================in query : ", results);
-            }); 
-            console.log("22222222222222222222 results : ", results);
-        });
+        finalresult = select_via_time(results);
+        console.log("22222222222222222222final result : ", finalresult);
     });
-     
- 
+
+
     ourdb_connection.end();
     mobius_connection.end();
 };
-
