@@ -64,10 +64,10 @@ exports.mobius_to_shero = function(){
         if(error) throw error;
         
         console.log('===================== results : ', results);
-        select_via_time(results, function(sql){
-            console.log('=============== sql : ', sql);
-            console.log('==================mobius_connection: ', mobius_connection);
-            mobius_connection.query(sql, function(error, results, fields){
+        select_via_time(results, function(sql_time){
+            console.log('=============== sql : ', sql_time);
+            //console.log('==================mobius_connection: ', mobius_connection);
+            mobius_connection.query(String(sql_time), function(error, results, fields){
                 console.log("======================in query : ", results);
             }); 
             console.log("22222222222222222222 results : ", results);
