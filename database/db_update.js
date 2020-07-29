@@ -32,18 +32,16 @@ global.writeDataToShero = function(data){
     year = time.substring(0, 4);    month = time.substring(4, 6);
     date = time.substring(6, 8);    mil_second = Number(time.substring(8, 17));
 
-    hou = parseInt(mil_second / hour);  mil_second = mil_second % hour;
-    min = parseInt(mil_second / minute);    mil_second = mil_second % minute;
+    console.log('Time :::::::::::::::::::::::::::::::', time);
+    hou = String(parseInt(mil_second / hour));  mil_second = mil_second % hour;
+    min = String(parseInt(mil_second / minute));    mil_second = mil_second % minute;
     sec = parseInt(mil_second / seconds);   mil_second = mil_second % seconds;
 
+    if(hou.length==1) hou ='0'+hou;
+    if(min.length==1) min = '0'+min;
 
-    console.log('Time ::::::::::::::::::::::::::::::::::::::::::::::::::::::::', time);
-    console.log('Hou ::::::::::::::::::::::::::::::::::::::::::::::::::::::::', hou);
-    console.log('Min ::::::::::::::::::::::::::::::::::::::::::::::::::::::::', min);
-    console.log('Sec ::::::::::::::::::::::::::::::::::::::::::::::::::::::::', sec);
-    console.log('Mil_Second ::::::::::::::::::::::::::::::::::::::::::::::::::::::::', mil_second);
-
-    sql = 'insert into co2_emissions(date_time,emissions,location) values('+'\''+ '2020-07-31 05:03:00' + '\''+ ','+ String(data[0].con) + ',' + '\''+ String(data[0].cr) +'\'' + ')';
+    time = year + '-' + month + '-' + date + ' ' + hou + ':' + min + ':' + String(sec)
+    sql = 'insert into co2_emissions(date_time,emissions,location) values('+'\''+ time + '\''+ ','+ String(data[0].con) + ',' + '\''+ String(data[0].cr) +'\'' + ')';
     ourdb_connection.query(sql, function(error, results, fields){
         if(error) throw error;
         console.log('Successss:::::::::::::::::::::::$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$',results);
