@@ -20,7 +20,19 @@ const ourdb_connInfo = {
     multipleStatements: true
 }
 
-global.select_via_time = function(date){
+global.sendDataToShero = function(data){
+    let ourdb_connection = mysql.createConnection(ourdb_connInfo);
+    console.log('DATaA:::::::::::::::::::::::',data);
+/*
+    ourdb_connection.query(, function(error, results, fields){
+        if(error) throw error;
+
+    });*/
+
+    ourdb_connection.end();
+}
+
+global.getDataFromMobius = function(date){
     let mobius_connection = mysql.createConnection(mobius_connInfo);
     const hour = 3600000;
     const minute = 60000;
@@ -51,7 +63,7 @@ global.select_via_time = function(date){
 
     mobius_connection.query(sql, function(error, results, fields){
         console.log("======================before results : ", results);
-        return results;
+        sendDataToShero(results);
     });
     mobius_connection.end();
 };
@@ -60,21 +72,19 @@ global.mili_to_time = function(time){
 
 };
 */
-exports.mobius_to_shero = async function(){
+
+exports.mobius_to_shero = function(){
     let ourdb_connection = mysql.createConnection(ourdb_connInfo);
     //mobius_connection.connect();
     //ourdb_connection.connect();
     finalResult = '';
 
-    await ourdb_connection.query('SELECT MAX(date_time) from co2_emissions', async function(error, results, fields){
+    ourdb_connection.query('SELECT MAX(date_time) from co2_emissions', function(error, results, fields){
         if(error) throw error;
 
         console.log('===================== results : ', results);
-        finalResult = await select_via_time(results);
-        console.log("22222222222222222222final result : ", finalResult);
+        getDataFromMobius(results);
+
     });
-
-    console.log("33333333333333333 final result : ", finalResult);
-
     ourdb_connection.end();
 };
