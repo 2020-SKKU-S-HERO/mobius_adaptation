@@ -21,6 +21,7 @@ const ourdb_connInfo = {
 }
 
 global.select_via_time = function(date){
+    let mobius_connection = mysql.createConnection(mobius_connInfo);
     const hour = 3600000;
     const minute = 60000;
     const seconds = 1000;
@@ -59,7 +60,6 @@ global.mili_to_time = function(time){
 };
 */
 exports.mobius_to_shero = function(){
-    let mobius_connection = mysql.createConnection(mobius_connInfo);
     let ourdb_connection = mysql.createConnection(ourdb_connInfo);
     //mobius_connection.connect();
     //ourdb_connection.connect();
