@@ -51,10 +51,10 @@ global.writeDataToShero = function(data){
     ourdb_connection.end();
 }
 
-global.getDataFromMobius = function(date){
+global.getDataFromMobius = function(result){
     let mobius_connection = mysql.createConnection(mobius_connInfo);
 
-    date = Date(date)
+    date = Date(result[0].time)
     date = new Date(date);
 
     year = String(date.getFullYear());  month = String(date.getMonth()+1);
@@ -93,7 +93,7 @@ exports.mobius_to_shero = function(){
     //mobius_connection.connect();
     //ourdb_connection.connect();
 
-    ourdb_connection.query('SELECT MAX(date_time) from co2_emissions', function(error, results, fields){
+    ourdb_connection.query('SELECT MAX(date_time) as time from co2_emissions', function(error, results, fields){
         if(error)throw error;
         else{
             console.log('===================== results : ', results);
