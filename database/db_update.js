@@ -57,22 +57,23 @@ global.mili_to_time = function(time){
 exports.mobius_to_shero = function(){
     let mobius_connection = mysql.createConnection(mobius_connInfo);
     let ourdb_connection = mysql.createConnection(ourdb_connInfo);
-    mobius_connection.connect();
-    ourdb_connection.connect();
+    //mobius_connection.connect();
+    //ourdb_connection.connect();
 
+    let sql = ''
     ourdb_connection.query('SELECT MAX(date_time) from co2_emissions', function(error, results, fields){
         if(error) throw error;
 
-        select_via_time(results, function(sql){
-            console.log('=================sql : ', sql);
+        result = select_via_time(results, function(sql){
             mobius_connection.query(sql, function(error, results, fields){
-                if(error) throw error;
-                console.log('========== The results is: ', results);
-            });
+                return results;
+            }); 
+        });
+
+
+    });
             //results 가공
 
-        });
-    });
  
     ourdb_connection.end();
     mobius_connection.end();
