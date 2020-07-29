@@ -56,10 +56,9 @@ global.getDataFromMobius = function(result){
 
     console.log('############ GET DATA FROM MOBIUS date : ', String(result[0].time));
     console.log('');
-    date = Date(result[0].time)
+    date = result[0].time
     console.log('&&&&&&&&&& GET DATA FROM MOBIUS date : ', date);
     console.log('');
-    date = new Date(date);
 
     year = String(date.getFullYear());  month = String(date.getMonth()+1);
     day = String(date.getDate());   hou = String(date.getHours());
@@ -75,6 +74,9 @@ global.getDataFromMobius = function(result){
     else if(milsec.length==2) milsec='0'+milsec;
 
     res = year + month + day + hou + minute + sec + milsec;
+    console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ RES : ', res);
+    console.log('');
+
     let sql = 'SELECT ri, con, cr FROM cin WHERE right(ri, 17) > '+ res;
 
     mobius_connection.query(sql, function(error, results, fields){
