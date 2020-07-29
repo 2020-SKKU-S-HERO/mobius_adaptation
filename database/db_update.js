@@ -42,8 +42,8 @@ global.writeDataToShero = function(data){
                 console.log('ERROR DETECTED ::::::::::::::::::::::', sql);
             }
             else{
-                console.log('Successss::::::::::::::::::::::', sql);
-                console.log('\n');
+                console.log('Successss on write Data To Shero !!!!!!!!!!!!!!!!!!', sql);
+                console.log('');
             }
         });
     }
@@ -54,8 +54,6 @@ global.writeDataToShero = function(data){
 global.getDataFromMobius = function(result){
     let mobius_connection = mysql.createConnection(mobius_connInfo);
 
-    console.log('############ GET DATA FROM MOBIUS date : ', String(result[0].time));
-    console.log('');
     date = result[0].time
     console.log('&&&&&&&&&& GET DATA FROM MOBIUS date : ', date);
     console.log('');
@@ -81,13 +79,18 @@ global.getDataFromMobius = function(result){
 
     mobius_connection.query(sql, function(error, results, fields){
         if(!results){
+            console.log('');
             console.log('====================================== MOBIUS DATA NULL');
         }
         else{
+            console.log('');
             console.log('SUCCESS on get Data From Mobius *****************************', sql);
-            console.log('\n');
+            console.log('');
             console.log('----------------------------- DATA FROM MOIBUS : ', results);
-            console.log('\n');
+            console.log('');
+            console.log('-------------------------------DATA LENGTH : ', results.length);
+            console.log('');
+
             writeDataToShero(results);
         }
     });
@@ -103,7 +106,7 @@ exports.mobius_to_shero = function(){
         if(error)throw error;
         else{
             console.log('===================== results : ', results);
-            console.log('\n');
+            console.log('');
             getDataFromMobius(results);
         }
     });
