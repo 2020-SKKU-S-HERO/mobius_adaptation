@@ -64,17 +64,17 @@ exports.mobius_to_shero = async function(){
     let ourdb_connection = mysql.createConnection(ourdb_connInfo);
     //mobius_connection.connect();
     //ourdb_connection.connect();
-    finalResult = ''
+    finalResult = '';
 
-    await ourdb_connection.query('SELECT MAX(date_time) from co2_emissions', function(error, results, fields){
+    await ourdb_connection.query('SELECT MAX(date_time) from co2_emissions', async function(error, results, fields){
         if(error) throw error;
 
         console.log('===================== results : ', results);
-        finalResult = select_via_time(results);
+        finalResult = await select_via_time(results);
         console.log("22222222222222222222final result : ", finalResult);
     });
 
-    console.log("33333333333333333 final result : ", finalResult)
+    console.log("33333333333333333 final result : ", finalResult);
 
     ourdb_connection.end();
 };
