@@ -57,7 +57,7 @@ global.mili_to_time = function(time){
 exports.mobius_to_shero = function(){
     let mobius_connection = mysql.createConnection(mobius_connInfo);
     let ourdb_connection = mysql.createConnection(ourdb_connInfo);
-    //mobius_connection.connect();
+    mobius_connection.connect();
     //ourdb_connection.connect();
 
     ourdb_connection.query('SELECT MAX(date_time) from co2_emissions', function(error, results, fields){
@@ -66,8 +66,9 @@ exports.mobius_to_shero = function(){
         console.log('===================== results : ', results);
         select_via_time(results, function(sql){
             console.log('=============== sql : ', sql);
+            console.log('==================mobius_connection: ', mobius_connection);
             mobius_connection.query(sql, function(error, results, fields){
-                console.log("======================before results : ", results);
+                console.log("======================in query : ", results);
             }); 
             console.log("22222222222222222222 results : ", results);
         });
