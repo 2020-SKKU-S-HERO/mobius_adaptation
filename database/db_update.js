@@ -24,7 +24,7 @@ global.sendDataToShero = function(data){
     let ourdb_connection = mysql.createConnection(ourdb_connInfo);
 
 
-    ourdb_connection.query('insert into co2_emissions(emissions,location) values(data[0].con,data[0].cr)', function(error, results, fields){
+    ourdb_connection.query('insert into co2_emissions(date_time,emissions,location) values(null,data[0].con,data[0].cr)', function(error, results, fields){
         if(error) throw error;
         console.log('DATaA:::::::::::::::::::::::$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$',results);
     });
