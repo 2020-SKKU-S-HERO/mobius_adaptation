@@ -44,7 +44,9 @@ global.writeDataToShero = function(data){
         sql = 'insert into co2_emissions(date_time,emissions,location) values('+'\''+ time + '\''+ ','+ String(data[0].con) + ',' + '\''+ String(data[0].cr) +'\'' + ')';
 
         ourdb_connection.query(sql, function(error, results, fields){
-            if(error) throw error;
+            if(error){
+                console.log('ERROR DETECTED ::::::::::::::::::::::', sql);
+            };
             console.log('Successss::::::::::::::::::::::', sql);
         });
     }
