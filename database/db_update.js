@@ -60,12 +60,12 @@ global.mili_to_time = function(time){
 
 };
 */
-exports.mobius_to_shero = async function(){
+exports.mobius_to_shero = function(){
     let ourdb_connection = mysql.createConnection(ourdb_connInfo);
     //mobius_connection.connect();
     //ourdb_connection.connect();
 
-    ourdb_connection.query('SELECT MAX(date_time) from co2_emissions', function(error, results, fields){
+    ourdb_connection.query('SELECT MAX(date_time) from co2_emissions', async function(error, results, fields){
         if(error) throw error;
 
         console.log('===================== results : ', results);
