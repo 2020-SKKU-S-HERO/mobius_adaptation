@@ -56,7 +56,7 @@ exports.mobius_to_shero = function(){
         console.log('********************* results get Full Year : ', results);
         console.log('********************* results get Full Year : ', Date(results));
         
-        //time = time_to_mili(results);
+        time = time_to_mili(Date(results));
         console.log('======== hooN : ', time);
     });
 
