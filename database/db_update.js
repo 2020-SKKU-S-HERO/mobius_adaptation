@@ -45,7 +45,8 @@ global.time_to_mili = function(date){
     }
     
     res = String(year)+month+day+res_milsec
-    return res;
+    let sql = 'SELECT ri, con, cr FROM cin WHERE right(ri, 17) > '+ res;
+    return sql;
 };
 /*
 global.mili_to_time = function(time){
@@ -58,18 +59,15 @@ exports.mobius_to_shero = function(){
     mobius_connection.connect();
     ourdb_connection.connect();
     
-    let mil_time = 0; 
+    let sql = ''; 
 
     ourdb_connection.query('SELECT MAX(date_time) from co2_emissions', function(error, results, fields){
         if(error) throw error;
 
-        mil_time = time_to_mili(results);
-        console.log('======== hooN : ', mil_time);
+        sql = time_to_mili(results);
+        console.log('======== hooN : ', sql);
     });
-
-    let sql = 'SELECT ri, con, cr FROM cin WHERE right(ri, 17) > '+ mil_time;
-    console.log('***************** sql : ', sql);
-
+    
     mobius_connection.query(sql, function(error, results, fields){
         if(error) throw error;
         //console.log('========== The results is: ', results);
