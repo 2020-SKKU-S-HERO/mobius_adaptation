@@ -54,7 +54,7 @@ global.writeDataToShero = function(data){
 global.getDataFromMobius = function(result){
     let mobius_connection = mysql.createConnection(mobius_connInfo);
 
-    console.log('############ GET DATA FROM MOBIUS date : ', result[0].time);
+    console.log('############ GET DATA FROM MOBIUS date : ', String(result[0].time));
     console.log('');
     date = Date(result[0].time)
     console.log('&&&&&&&&&& GET DATA FROM MOBIUS date : ', date);
