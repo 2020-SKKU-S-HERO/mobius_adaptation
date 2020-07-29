@@ -52,9 +52,11 @@ exports.mobius_to_shero = function(){
 
     ourdb_connection.query('SELECT MAX(date_time) from co2_emissions', function(error, results, fields){
         if(error) throw error;
-        console.log('********************* results get Full Year : ', results.getFullYear());
 
-        time = time_to_mili(results);
+        console.log('********************* results get Full Year : ', results);
+        console.log('********************* results get Full Year : ', Date(results));
+        
+        //time = time_to_mili(results);
         console.log('======== hooN : ', time);
     });
 
