@@ -23,11 +23,11 @@ const ourdb_connInfo = {
 global.sendDataToShero = function(data){
     let ourdb_connection = mysql.createConnection(ourdb_connInfo);
 
-    let sql = 'insert into co2_emissions(date_time,emissions,location) values('+'\''+ '2020-07-31' + '\''+ ','+ String(data[0].con) + ',' + '\''+ String(data[0].cr) +'\'' + ')';
-  console.log('DATaA:::::::::::::::::::::::$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$',sql);
+    let sql = 'insert into co2_emissions(date_time,emissions,location) values('+'\''+ '2020-07-31 05:03:00' + '\''+ ','+ String(data[0].con) + ',' + '\''+ String(data[0].cr) +'\'' + ')';
+    console.log('DATaA:::::::::::::::::::::::$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$',sql);
     ourdb_connection.query(sql, function(error, results, fields){
         if(error) throw error;
-        console.log('DATaA:::::::::::::::::::::::$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$',results);
+        console.log('Successss:::::::::::::::::::::::$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$',results);
     });
 
     ourdb_connection.end();
