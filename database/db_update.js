@@ -84,6 +84,11 @@ global.getDataFromMobius = function(date){
     let sql = 'SELECT ri, con, cr FROM cin WHERE right(ri, 17) > '+ res;
 
     mobius_connection.query(sql, function(error, results, fields){
+        if(!results){
+            console.log('====================================== MOBIUS DATA NULL');
+        }
+        console.log('SUCCESS on get Data From Mobius *****************************', sql);
+        console.log('----------------------------- DATA FROM MOIBUS : ', results);
         writeDataToShero(results);
     });
     mobius_connection.end();
