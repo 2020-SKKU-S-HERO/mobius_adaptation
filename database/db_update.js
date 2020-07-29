@@ -73,8 +73,6 @@ exports.mobius_to_shero = function(){
 
         });
     });
-    
-    }
  
     ourdb_connection.end();
     mobius_connection.end();
