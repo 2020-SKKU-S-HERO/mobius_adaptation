@@ -28,7 +28,11 @@ global.writeDataToShero = function(data){
     let time, year, month, date, hou, min, sec, milsec;
 
     for(var i=0; i<data.length; i++){
-        time = data[i].ri.split('-')[1];
+        time = data[i].ri.split('-');
+        info = time[0].split('/')[3];
+        console.log(' ::::::: DB row info : ', info);
+
+        time = time[1];
         year = time.substring(0, 4);    month = time.substring(4, 6);
         date = time.substring(6, 8);    hou = time.substring(8, 10);
         min = time.substring(10, 12);   sec = time.substring(12, 14);
@@ -55,7 +59,7 @@ global.getDataFromMobius = function(result){
     let mobius_connection = mysql.createConnection(mobius_connInfo);
 
     date = result[0].time
-    console.log('&&&&&&&&&& GET DATA FROM MOBIUS date : ', date);
+    console.log(':::::::::: GET DATA FROM MOBIUS date : ', date);
     console.log('');
 
     year = String(date.getFullYear());  month = String(date.getMonth()+1);
@@ -72,7 +76,7 @@ global.getDataFromMobius = function(result){
     else if(milsec.length==2) milsec='0'+milsec;
 
     res = year + month + day + hou + minute + sec + milsec;
-    console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ RES : ', res);
+    console.log('::::::::::::::: RES : ', res);
     console.log('');
 
     let sql = 'SELECT ri, con, cr FROM cin WHERE right(ri, 17) > '+ res;
@@ -80,11 +84,11 @@ global.getDataFromMobius = function(result){
     mobius_connection.query(sql, function(error, results, fields){
         if(!results){
             console.log('');
-            console.log('====================================== MOBIUS DATA NULL');
+            console.log('============== MOBIUS DATA NULL');
         }
         else{
             console.log('');
-            console.log('SUCCESS on get Data From Mobius *****************************', sql);
+            console.log('SUCCESS on get Data From Mobius ********************', sql);
             console.log('');
             console.log('----------------------------- DATA FROM MOIBUS : ', results);
             console.log('');
