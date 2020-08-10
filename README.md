@@ -12,6 +12,47 @@
 - 예측 모델을 만들어 들어온 데이터들을 학습시킨다.
 - 모델, DB를 제어할 수 있게 만든다.
 
+
+## 구글 클라우드 플랫폼
+
+구글 클라우드 플랫폼에 리눅스 서버를 구축하였다.
+
+### 접속 방법
+
+ssh를 사용하여 접속할 수 있다. rsa key는 rsa-gcp-key 파일을 사용한다.
+rsa-gcp-key 파일이 있는 곳에서 터미널을 열고 다음의 쉘 명령어를 입력한다.
+외부 아이피는 34.64.238.233이다.
+
+```shell script
+ssh -i ./rsa-gcp-key shero@34.64.238.233
+```
+
+shell을 사용하지 않을 경우 putty_gen을 사용하여 rsa-key를 생성한다.
+private key는 적당한 장소에 저장하고, public key를 GCP(Google Clout Platform)에 등록한다.
+putty를 사용하여 '이름@34.64.238.233'으로 접속하면 된다.
+
+### 서버 상태
+
+구글 클라우드 플랫폼의 리눅스 서버에 MySQL과 mosquitto, Grafana를 구축하였고,
+백그라운드에 파이썬으로 작성된 구독자 프로그램을 실행 중이다.
+
+#### MySQL
+
+MySQL은 서버 내부에서 root로 접속할 수 있다.
+
+```shell script
+mysql -u root -p
+```
+password는 shero이다.
+
+서버 외부에서는 shero로 접속할 수 있다.
+
+```shell script
+mysql -h 34.64.238.233 -u shero -p
+```
+
+'sheroDB'라는 이름의 DB가 생성되어 있고, 그 안에 'co2_emissions'라는 이름의 테이블이 생성되어 있다.
+해당 테이블의 열은 date_time, emissions로 2개이고, 각각 DATETIME, DOUBLE(7, 2) 타입을 갖는다.
 <br>
 <br>
 
