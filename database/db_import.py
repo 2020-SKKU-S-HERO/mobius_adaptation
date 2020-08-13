@@ -1,4 +1,3 @@
-
 import pandas as pd
 import pymysql.cursors
 
@@ -16,7 +15,7 @@ for index, row in data.iterrows():
 
 testDB = pymysql.connect(
     host = "localhost",
-    port = '3306',
+    port = 3306,
     user = "root",
     password = 'shero',
     database = 'test',
@@ -26,10 +25,8 @@ testDB = pymysql.connect(
 try:
     cursor = testDB.cursor()
     for index, row in data.iterrows():
-        sql = "INSERT INTO test (acid, caco3, co2) VALUES ("+
-            str(row['acid']) + "," +
-            str(row['caco3']) + "," +
-            str(row['co2']) + ")"
+        sql = "INSERT INTO test (acid, caco3, co2) VALUES ("+str(row['acid']) + "," + str(row['caco3']) + "," + str(row['co2']) + ");"
+        cursor.execute(sql)
     testDB.commit()
 finally:
     testDB.close()
