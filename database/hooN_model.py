@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers
@@ -44,7 +45,7 @@ model = build_model()
 print(model.summary())
 
 example_batch = normed_train_data[:10]
-example_result = model.predict(example_batch)
+example_result = np.array(model.predict(example_batch))
 for i in range(len(example_result)):
     example_result[i] = (example_result[i] + train_stats['mean'])*train_stats['std']
 
