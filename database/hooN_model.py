@@ -20,7 +20,7 @@ train_data = df.sample(frac=0.8, random_state=0)
 test_data = df.drop(train_data.index)
 train_label = train_data.pop('co2')
 test_label = test_data.pop('co2')
-train_stats = train_data.dataset.describe().transpose()
+train_stats = train_data.describe().transpose()
 
 def norm(x):
     return (x - train_stats['mean'])/train_stats['std']
