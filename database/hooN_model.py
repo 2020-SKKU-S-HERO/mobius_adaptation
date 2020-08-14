@@ -40,6 +40,7 @@ def build_model():
     model.compile(loss='mse', optimizer=optimizer, metrics=['mae', 'mse'])
     return model
 
+model = build_model()
 print(model.summary())
 
 example_batch = normed_train_data[:10]
