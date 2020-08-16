@@ -37,16 +37,19 @@ global.writeDataToShero = function(data){
         date = time.substring(6, 8);    hou = time.substring(8, 10);
         min = time.substring(10, 12);   sec = time.substring(12, 14);
         milsec = time.substring(14, 17);
-
+		
         time = year + '-' + month + '-' + date + ' ' + hou + ':' + min + ':' + sec +'.' + milsec;
         if(info=='temp'){
             sql = 'insert into temperature(date_time,temperature,location) values('+'\''+ time + '\''+ ','+ String(data[0].con) + ',' + '\''+ String(data[0].cr) +'\'' + ')';
+		    console.log(":::::::::: DB row temp is inserted in temp ");
         }
         else if(info=='flowRate'){
             sql = 'insert into flow_velocity(date_time,flow_velocity,location) values('+'\''+ time + '\''+ ','+ String(data[0].con) + ',' + '\''+ String(data[0].cr) +'\'' + ')';
+		    console.log(":::::::::: DB row flowRate is inserted in flowRate ");
         }
         else{
             sql = 'insert into co2_emissions(date_time,emissions,location) values('+'\''+ time + '\''+ ','+ String(data[0].con) + ',' + '\''+ String(data[0].cr) +'\'' + ')';
+		    console.log(":::::::::: DB row co2 is inserted in co2 ");
         }
 
         ourdb_connection.query(sql, function(error, results, fields){
