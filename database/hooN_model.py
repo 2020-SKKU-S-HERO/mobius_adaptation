@@ -1,9 +1,9 @@
 import pandas as pd
-import numpy as np
 import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers
 import pymysql.cursors
+import matplotlib.pyplot as plt
 
 test_DB = pymysql.connect(
     host = "localhost",
@@ -26,6 +26,9 @@ train_stats = train_data.describe().transpose()
 def norm(x):
     return (x - train_stats['mean'])/train_stats['std']
 
+def denorm(x):
+	return x*train_stats['std']+train_stats['mean']
+
 normed_train_data = norm(train_data)
 normed_test_data = norm(test_data)
 
@@ -45,8 +48,25 @@ model = build_model()
 print(model.summary())
 
 example_batch = normed_train_data[:10]
-example_result = np.array(model.predict(example_batch))
-for i in range(len(example_result)):
-    example_result[i] = (example_result[i] + train_stats['mean'])*train_stats['std']
+example_result = model.predict(example_batch)
 
-print('example_result : ', example_result)
+class PrintDot(keras.callbacks.Callback):
+	def on_epoch_end(self, epoch, logs):
+		if epoch % 20 == 0: print('')
+		print('.', end='')
+
+EPOCHS = 20
+history = model.fit(
+		normed_train_data, train_label, epochs=EPOCHS, validation_split = 0.2, verbose=0, callbacks=[PrintDot()])
+
+hist = pd.DataFrame(history.history)
+hist['epoch'] = history.epoch
+print(hist.tail())
+
+loss, mae, mse = model.evaluate(normed_test_data, test_label, verbose=2)
+print("mae : {:5.2f} MPG".format(mae))
+
+test_predictions = model.predict(normed_test_data).flatten()
+
+error = test_predictions - test_label
+print("error ::::: " ,error)
