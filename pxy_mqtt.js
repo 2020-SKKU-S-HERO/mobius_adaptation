@@ -188,10 +188,14 @@ function reg_req_sub() {
 }
 
 function mqtt_message_handler(topic, message) {
+    
     if(topic=='ctrl'){
         console.log("hooN mqtt received :::::::::::::::::::::");
+        console.log(message);
+        return;
     }
-    else    var topic_arr = topic.split("/");
+       
+    var topic_arr = topic.split("/");
 
     if(topic_arr[5] != null) {
         var bodytype = (topic_arr[5] == 'xml') ? topic_arr[5] : ((topic_arr[5] == 'json') ? topic_arr[5] : ((topic_arr[5] == 'cbor') ? topic_arr[5] : 'json'));
