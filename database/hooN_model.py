@@ -5,7 +5,10 @@ import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers
 import pymysql.cursors
+from sqlalchemy import create_engine
 import matplotlib.pyplot as plt
+
+engine = create_engine('mysql+pymysql://root:shero@localhost/test', echo=True)
 
 test_DB = pymysql.connect(
     host = "localhost",
@@ -17,7 +20,7 @@ test_DB = pymysql.connect(
 )
 
 sql = 'select * from test'
-df = pd.read_sql(sql, test_DB)
+df = pd.read_sql(sql, engine)
 
 def norm(x):
 	return (x - train_stats['mean'])/train_stats['std']
@@ -33,7 +36,7 @@ normed_test_data = norm(test_data)
 
 class PrintDot(keras.callbacks.Callback):
 	def on_epoch_end(self, epoch, logs):
-		if epoch % 20 == 0: print('')
+		if epoch % 40 == 0: print('')
 		print('.',end='')
 
 
@@ -48,9 +51,14 @@ def build_model():
     optimizer = tf.keras.optimizers.RMSprop(0.001)
     model.compile(loss='mse', optimizer=optimizer, metrics=['mae', 'mse'])
     #print("model summary : ", model.summary())
-
+	
+    """
+    history = model.fit(
+			train_data, train_label, epochs=EPOCHS, validation_split = 0.2, verbose=0, callbacks=[PrintDot()])
+    """
     history = model.fit(
 		normed_train_data, train_label, epochs=EPOCHS, validation_split = 0.2, verbose=0, callbacks=[PrintDot()])
+	
     hist = pd.DataFrame(history.history)
     hist['epoch'] = history.epoch
     #print(hist.tail())
@@ -70,11 +78,16 @@ def model_test(model):
     return model    
 
 def prediction_write_DB(model, input_data):
-    predict_value = model.predict(norm(input_data)).flatten()
-    predict_value = predict_value * train_stats['std']['co2'] + train_stats['mean']['co2']
-    print()
-    print(predict_value[0:100])
-    print(type(predict_value))
+    predict_value = model.predict(input_data).flatten()
+    #predict_value = model.predict(input_data).flatten()
+    #predict_value = predict_value * train_stats['std']['co2'] + train_stats['mean']['co2']
+#print()
+#print(predict_value[0:100])
+#print(test_label[0:100])
+    predict_value = pd.Series(data=predict_value, dtype=object, name='co2_predict')
+#print(predict_value)
+    predict_value.to_sql(name='predict_value', con=engine, if_exists='replace')
+	print("Success on database writing")
 
 
 def return_prediction_value(model, input_data):
