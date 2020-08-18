@@ -1,15 +1,21 @@
-let {PythonShell} = require('python-shell');
+const {PythonShell} = require('python-shell');
+
+
+script_path = __dirname + '\\hooN_model.py'
+python_path = ''
 
 let options = {
 	mode : 'text',
-	pythonPath : '',
+	pythonPath : python_path,
 	pythonOptions : ['-u'],
-	scriptPath : '',
+	scriptPath : script_path,
 	args : []
 };
 
-PythonShell.run('hooN_model.py',options,function(err){
+PythonShell.run('hooN_model.py',options ,function(err, result){
 	if(err) throw err;
+	console.log("Python result : ");
+	console.log(result);
 	console.log('finsihed');
 });
 
