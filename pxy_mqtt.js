@@ -191,7 +191,8 @@ function mqtt_message_handler(topic, message) {
     
     if(topic=='ctrl'){
         console.log("hooN mqtt received :::::::::::::::::::::");
-        console.log(message);
+        console.log(message.toString());
+        console.log(message.payload);
         return;
     }
        
