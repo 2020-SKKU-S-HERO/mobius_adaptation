@@ -30,7 +30,15 @@ train_stats = train_data.describe().transpose()
 normed_train_data = norm(train_data)
 normed_test_data = norm(test_data)
 
-def build_model():
+
+class PrintDot(keras.callbacks.Callback):
+	def on_epoch_end(self, epoch, logs):
+		if epoch % 20 == 0: print('')
+		print('.',end='')
+
+
+def build_model():   
+    EPOCHS = 20
     model = keras.Sequential([
         layers.Dense(64, activation='relu', input_shape=[len(train_data.keys())]),
         layers.Dense(64, activation='relu'),
@@ -38,33 +46,38 @@ def build_model():
     ])
 
     optimizer = tf.keras.optimizers.RMSprop(0.001)
-
     model.compile(loss='mse', optimizer=optimizer, metrics=['mae', 'mse'])
-    print("model summary : ", model.summary())
-    return model
+    #print("model summary : ", model.summary())
 
-class PrintDot(keras.callbacks.Callback):
-	def on_epoch_end(self, epoch, logs):
-		if epoch % 20 == 0: print('')
-		print('.',end='')
-
-def model_test():
-    model = build_model()
-    EPOCHS = 20
     history = model.fit(
 		normed_train_data, train_label, epochs=EPOCHS, validation_split = 0.2, verbose=0, callbacks=[PrintDot()])
-
     hist = pd.DataFrame(history.history)
     hist['epoch'] = history.epoch
-    print(hist.tail())
+    #print(hist.tail())
+    return model
 
+
+def model_test(model):
+    model = build_model()
+    
     loss, mae, mse = model.evaluate(normed_test_data, test_label, verbose=2)
     print("mae : {:5.2f} MPG".format(mae))
 
     test_predictions = model.predict(normed_test_data).flatten()
+    difference = test_predictions - test_label
+    print("difference ::::: ")
+    print(difference)
+    return model    
 
-    error = test_predictions - test_label
-    print("error ::::: " ,error)
-    return model
+def prediction_write_DB(model, input_data):
+    predict_value = model.predict(norm(input_data)).flatten()
+    print(predict_value)
+    print(type(predict_value))
 
-model_test()
+
+def return_prediction_value(model, input_data):
+    predict_value = model.predict(norm(input_data)).flatten()
+    return predict_value
+
+model_hoon = build_model()
+prediction_write_DB(model_hoon, normed_test_data)
