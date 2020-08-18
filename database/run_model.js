@@ -1,8 +1,7 @@
 const {PythonShell} = require('python-shell');
 
-
-script_path = __dirname + '\\hooN_model.py'
-python_path = ''
+script_path = __dirname;
+python_path = '';
 
 let options = {
 	mode : 'text',
