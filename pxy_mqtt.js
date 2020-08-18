@@ -135,6 +135,7 @@ exports.mqtt_watchdog = function() {
             pxymqtt_client.on('connect', function () {
                 req_sub();
                 reg_req_sub();
+                ctrl_sub();
                 //resp_sub();
                 mqtt_state = 'ready';
                 
@@ -160,6 +161,12 @@ function resp_sub() {
     console.log('subscribe resp_topic as ' + resp_topic);
 }
 
+function ctrl_sub(){
+    var ctrl_topic = 'ctrl';
+    pxymqtt_client.subscribe(ctrl_topic);
+    console.log('subscribe ctrl_topic as ' + ctrl_topic);
+}
+
 function req_sub() {
     var req_topic = util.format('/oneM2M/req/+/%s/+', usecseid.replace('/', ''));
     pxymqtt_client.subscribe(req_topic);
@@ -181,7 +188,11 @@ function reg_req_sub() {
 }
 
 function mqtt_message_handler(topic, message) {
-    var topic_arr = topic.split("/");
+    if(topic=='ctrl'){
+        console.log("hooN mqtt received :::::::::::::::::::::");
+    }
+    else    var topic_arr = topic.split("/");
+
     if(topic_arr[5] != null) {
         var bodytype = (topic_arr[5] == 'xml') ? topic_arr[5] : ((topic_arr[5] == 'json') ? topic_arr[5] : ((topic_arr[5] == 'cbor') ? topic_arr[5] : 'json'));
     }
