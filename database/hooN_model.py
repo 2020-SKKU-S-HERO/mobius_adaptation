@@ -71,7 +71,8 @@ def model_test(model):
 
 def prediction_write_DB(model, input_data):
     predict_value = model.predict(norm(input_data)).flatten()
-    print(predict_value)
+    print()
+    print(predict_value[0:100])
     print(type(predict_value))
 
 
