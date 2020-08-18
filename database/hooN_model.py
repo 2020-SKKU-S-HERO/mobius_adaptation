@@ -22,15 +22,16 @@ test_data = df.drop(train_data.index)
 train_label = train_data.pop('co2')
 test_label = test_data.pop('co2')
 train_stats = train_data.describe().transpose()
+normed_train_data = norm(train_data)
+normed_test_data = norm(test_data)
+example_batch = normed_train_data[:10]
+example_result = model.predict(example_batch)
 
 def norm(x):
     return (x - train_stats['mean'])/train_stats['std']
 
 def denorm(x):
 	return x*train_stats['std']+train_stats['mean']
-
-normed_train_data = norm(train_data)
-normed_test_data = norm(test_data)
 
 def build_model():
     model = keras.Sequential([
@@ -42,31 +43,31 @@ def build_model():
     optimizer = tf.keras.optimizers.RMSprop(0.001)
 
     model.compile(loss='mse', optimizer=optimizer, metrics=['mae', 'mse'])
+    print("model summary : ", model.summary())
     return model
-
-model = build_model()
-print(model.summary())
-
-example_batch = normed_train_data[:10]
-example_result = model.predict(example_batch)
 
 class PrintDot(keras.callbacks.Callback):
 	def on_epoch_end(self, epoch, logs):
 		if epoch % 20 == 0: print('')
 		print('.', end='')
 
-EPOCHS = 20
-history = model.fit(
+def model_test():
+    model = build_model()
+    EPOCHS = 20
+    history = model.fit(
 		normed_train_data, train_label, epochs=EPOCHS, validation_split = 0.2, verbose=0, callbacks=[PrintDot()])
 
-hist = pd.DataFrame(history.history)
-hist['epoch'] = history.epoch
-print(hist.tail())
+    hist = pd.DataFrame(history.history)
+    hist['epoch'] = history.epoch
+    print(hist.tail())
 
-loss, mae, mse = model.evaluate(normed_test_data, test_label, verbose=2)
-print("mae : {:5.2f} MPG".format(mae))
+    loss, mae, mse = model.evaluate(normed_test_data, test_label, verbose=2)
+    print("mae : {:5.2f} MPG".format(mae))
 
-test_predictions = model.predict(normed_test_data).flatten()
+    test_predictions = model.predict(normed_test_data).flatten()
 
-error = test_predictions - test_label
-print("error ::::: " ,error)
+    error = test_predictions - test_label
+    print("error ::::: " ,error)
+    return model
+
+model_test()
