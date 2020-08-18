@@ -1,3 +1,5 @@
+import sys
+import os
 import pandas as pd
 import tensorflow as tf
 from tensorflow import keras
@@ -49,7 +51,7 @@ def build_model():
 class PrintDot(keras.callbacks.Callback):
 	def on_epoch_end(self, epoch, logs):
 		if epoch % 20 == 0: print('')
-		print('.', end='')
+		print('.',end='')
 
 def model_test():
     model = build_model()
