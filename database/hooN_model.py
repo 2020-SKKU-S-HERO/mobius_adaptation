@@ -71,6 +71,7 @@ def model_test(model):
 
 def prediction_write_DB(model, input_data):
     predict_value = model.predict(norm(input_data)).flatten()
+    predict_value = predict_value * train_stats['std']['co2'] + train_stats['mean']['co2']
     print()
     print(predict_value[0:100])
     print(type(predict_value))
