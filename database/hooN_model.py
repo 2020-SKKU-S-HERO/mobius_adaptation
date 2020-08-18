@@ -19,6 +19,9 @@ test_DB = pymysql.connect(
 sql = 'select * from test'
 df = pd.read_sql(sql, test_DB)
 
+def norm(x):
+	return (x - train_stats['mean'])/train_stats['std']
+
 train_data = df.sample(frac=0.8, random_state=0)
 test_data = df.drop(train_data.index)
 train_label = train_data.pop('co2')
@@ -26,14 +29,6 @@ test_label = test_data.pop('co2')
 train_stats = train_data.describe().transpose()
 normed_train_data = norm(train_data)
 normed_test_data = norm(test_data)
-example_batch = normed_train_data[:10]
-example_result = model.predict(example_batch)
-
-def norm(x):
-    return (x - train_stats['mean'])/train_stats['std']
-
-def denorm(x):
-	return x*train_stats['std']+train_stats['mean']
 
 def build_model():
     model = keras.Sequential([
