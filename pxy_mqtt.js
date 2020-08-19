@@ -138,7 +138,7 @@ exports.mqtt_watchdog = function() {
                 ctrl_sub();
                 //resp_sub();
                 mqtt_state = 'ready';
-                
+
                 require('./mobius/ts_agent');
             });
 
@@ -161,7 +161,7 @@ function resp_sub() {
     console.log('subscribe resp_topic as ' + resp_topic);
 }
 
-function ctrl_sub(){
+function ctrl_sub(){ //
     var ctrl_topic = 'ctrl';
     pxymqtt_client.subscribe(ctrl_topic);
     console.log('subscribe ctrl_topic as ' + ctrl_topic);
@@ -188,14 +188,15 @@ function reg_req_sub() {
 }
 
 function mqtt_message_handler(topic, message) {
-    
+
     if(topic=='ctrl'){
         console.log("hooN mqtt received :::::::::::::::::::::");
         console.log(message.toString());
         console.log(message.payload);
+        pxymqtt_client.publish(topic+"/arduino", message);
         return;
     }
-       
+
     var topic_arr = topic.split("/");
 
     if(topic_arr[5] != null) {
