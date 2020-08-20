@@ -87,7 +87,7 @@ def prediction_write_DB(model, input_data):
     predict_value = pd.Series(data=predict_value, dtype=object, name='co2_predict')
 #print(predict_value)
     predict_value.to_sql(name='predict_value', con=engine, if_exists='replace')
-	print("Success on database writing")
+    print("Success on database writing")
 
 
 def return_prediction_value(model, input_data):
