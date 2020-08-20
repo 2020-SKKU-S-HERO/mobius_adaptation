@@ -4,7 +4,6 @@ import pandas as pd
 import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers
-import pymysql.cursors
 from sqlalchemy import create_engine
 import matplotlib.pyplot as plt
 
@@ -20,18 +19,20 @@ test_DB = pymysql.connect(
 )
 
 sql = 'select * from test'
-df = pd.read_sql(sql, engine)
+df = pd.read_sql(sql, engine, index_col = 'date')
 
 def norm(x):
 	return (x - train_stats['mean'])/train_stats['std']
 
-train_data = df.sample(frac=0.8, random_state=0)
+train_data = df.iloc[0:8000, :]
 test_data = df.drop(train_data.index)
 train_label = train_data.pop('co2')
 test_label = test_data.pop('co2')
 train_stats = train_data.describe().transpose()
 normed_train_data = norm(train_data)
 normed_test_data = norm(test_data)
+
+print(train_data.head())
 
 
 class PrintDot(keras.callbacks.Callback):
@@ -57,10 +58,12 @@ def build_model():
 			train_data, train_label, epochs=EPOCHS, validation_split = 0.2, verbose=0, callbacks=[PrintDot()])
     """
     history = model.fit(
-		normed_train_data, train_label, epochs=EPOCHS, validation_split = 0.2, verbose=0, callbacks=[PrintDot()])
+		normed_train_data, train_label, epochs=EPOCHS, 
+        validation_split = 0.2, verbose=0, callbacks=[PrintDot()]
+    )
 	
-    hist = pd.DataFrame(history.history)
-    hist['epoch'] = history.epoch
+    #hist = pd.DataFrame(history.history)
+    #hist['epoch'] = history.epoch
     #print(hist.tail())
     return model
 

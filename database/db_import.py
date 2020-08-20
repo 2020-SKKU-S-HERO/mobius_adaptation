@@ -1,9 +1,9 @@
 import pandas as pd
 import pymysql.cursors
 
-data = pd.read_csv('testdata.csv', sep=',', header=0, names=['acid', 'caco3', 'co2'])
+data = pd.read_csv('testdata.csv', sep=',', header=0, names=['acid', 'caco3', 'co2', 'date'])
 
-columns = ['acid', 'caco3', 'co2']
+columns = ['acid', 'caco3', 'co2', 'date']
 
 """
 for index, row in data.iterrows():
@@ -25,7 +25,7 @@ testDB = pymysql.connect(
 try:
     cursor = testDB.cursor()
     for index, row in data.iterrows():
-        sql = "INSERT INTO test (acid, caco3, co2) VALUES ("+str(row['acid']) + "," + str(row['caco3']) + "," + str(row['co2']) + ");"
+        sql = "INSERT INTO test (date_time, acid, caco3, co2) VALUES ("+str(row['date']+","+str(row['acid']) + "," + str(row['caco3']) + "," + str(row['co2']) + ");"
         cursor.execute(sql)
     testDB.commit()
 finally:
