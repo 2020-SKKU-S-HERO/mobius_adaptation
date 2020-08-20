@@ -1,6 +1,7 @@
 import sys
 import os
 import pandas as pd
+import numpy as np
 import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers
@@ -9,6 +10,7 @@ import matplotlib.pyplot as plt
 
 engine = create_engine('mysql+pymysql://root:shero@localhost/test', echo=True)
 
+"""
 test_DB = pymysql.connect(
     host = "localhost",
     port = 3306,
@@ -17,9 +19,10 @@ test_DB = pymysql.connect(
     database = 'test',
     charset = 'utf8'
 )
+"""
 
 sql = 'select * from test'
-df = pd.read_sql(sql, engine, index_col = 'date')
+df = pd.read_sql(sql, engine, index_col = 'date_time')
 
 def norm(x):
 	return (x - train_stats['mean'])/train_stats['std']
@@ -32,7 +35,7 @@ train_stats = train_data.describe().transpose()
 normed_train_data = norm(train_data)
 normed_test_data = norm(test_data)
 
-print(train_data.head())
+#print(train_data.head())
 
 
 class PrintDot(keras.callbacks.Callback):
@@ -85,9 +88,19 @@ def prediction_write_DB(model, input_data):
     #predict_value = model.predict(input_data).flatten()
     #predict_value = predict_value * train_stats['std']['co2'] + train_stats['mean']['co2']
 #print()
+#print(input_data.head())
 #print(predict_value[0:100])
 #print(test_label[0:100])
-    predict_value = pd.Series(data=predict_value, dtype=object, name='co2_predict')
+    index = input_data.index
+    index = np.array(index)
+    print('')
+    print("::::::::::::::::::::::::::::::::::")
+#print(index)
+    dic = {'date_time': index,'predict_value':predict_value}
+
+    predict_value = pd.DataFrame(data=dic, dtype=object)
+
+#print(predict_value.head())
 #print(predict_value)
     predict_value.to_sql(name='predict_value', con=engine, if_exists='replace')
     print("Success on database writing")

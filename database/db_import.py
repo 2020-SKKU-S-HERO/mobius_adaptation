@@ -25,7 +25,7 @@ testDB = pymysql.connect(
 try:
     cursor = testDB.cursor()
     for index, row in data.iterrows():
-        sql = "INSERT INTO test (date_time, acid, caco3, co2) VALUES ("+str(row['date']+","+str(row['acid']) + "," + str(row['caco3']) + "," + str(row['co2']) + ");"
+        sql = "INSERT INTO test (date_time, acid, caco3, co2) VALUES ('"+str(row['date'])+"',"+str(row['acid']) + "," + str(row['caco3']) + "," + str(row['co2']) + ");"
         cursor.execute(sql)
     testDB.commit()
 finally:
