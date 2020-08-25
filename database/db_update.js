@@ -43,17 +43,44 @@ global.writeDataToShero = function(data){
         if(info=='temp'){
             sql = 'insert into temperature(date_time,temperature,location) values('+'\''+ time + '\''+ ','+ String(data[i].con) + ',' + '\''+ String(data[0].cr) +'\'' + ')';
 		    console.log(":::::::::: DB row temp is inserted in temp ");
+        ourdb_connection.query(sql, function(error, results, fields){
+               if(error){
+                   console.log('ERROR DETECTED ::::::::::::::::::::::', sql);
+               }
+               else{
+                   console.log('Successss on write temperature To Shero !!!!!!!!!!!!!!!!!!', sql);
+                   console.log('');
+               }
+           });
         }
         else if(info=='flowRate'){
             sql = 'insert into flow_velocity(date_time,flow_velocity,location) values('+'\''+ time + '\''+ ','+ String(data[i].con) + ',' + '\''+ String(data[0].cr) +'\'' + ')';
 		    console.log(":::::::::: DB row flowRate is inserted in flowRate ");
+        ourdb_connection.query(sql, function(error, results, fields){
+               if(error){
+                   console.log('ERROR DETECTED ::::::::::::::::::::::', sql);
+               }
+               else{
+                   console.log('Successss on write flow_velocity To Shero !!!!!!!!!!!!!!!!!!', sql);
+                   console.log('');
+               }
+           });
         }
         else{
             sql = 'insert into co2_emissions(date_time,emissions,location) values('+'\''+ time + '\''+ ','+ String(data[i].con) + ',' + '\''+ String(data[0].cr) +'\'' + ')';
 		    console.log(":::::::::: DB row co2 is inserted in co2 ");
+        ourdb_connection.query(sql, function(error, results, fields){
+               if(error){
+                   console.log('ERROR DETECTED ::::::::::::::::::::::', sql);
+               }
+               else{
+                   console.log('Successss on write co2_emissions To Shero !!!!!!!!!!!!!!!!!!', sql);
+                   console.log('');
+               }
+           });
         }
 
-        ourdb_connection.query(sql, function(error, results, fields){
+    /*    ourdb_connection.query(sql, function(error, results, fields){
             if(error){
                 console.log('ERROR DETECTED ::::::::::::::::::::::', sql);
             }
@@ -61,7 +88,7 @@ global.writeDataToShero = function(data){
                 console.log('Successss on write Data To Shero !!!!!!!!!!!!!!!!!!', sql);
                 console.log('');
             }
-        });
+        });*/
     }
 
     ourdb_connection.end();
