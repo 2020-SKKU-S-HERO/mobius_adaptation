@@ -24,7 +24,7 @@ const ourdb_connInfo = {
 global.writeDataToShero = function(data){
     let ourdb_connection = mysql.createConnection(ourdb_connInfo);
     let sql = '';
-   
+
     let time, year, month, date, hou, min, sec, milsec;
 
     for(var i=0; i<data.length; i++){
@@ -37,8 +37,9 @@ global.writeDataToShero = function(data){
         date = time.substring(6, 8);    hou = time.substring(8, 10);
         min = time.substring(10, 12);   sec = time.substring(12, 14);
         milsec = time.substring(14, 17);
-		
+
         time = year + '-' + month + '-' + date + ' ' + hou + ':' + min + ':' + sec +'.' + milsec;
+        console.log('info--------------',info);
         if(info=='temp'){
             sql = 'insert into temperature(date_time,temperature,location) values('+'\''+ time + '\''+ ','+ String(data[0].con) + ',' + '\''+ String(data[0].cr) +'\'' + ')';
 		    console.log(":::::::::: DB row temp is inserted in temp ");
