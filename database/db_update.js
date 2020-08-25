@@ -29,7 +29,7 @@ global.writeDataToShero = function(data){
 
     for(var i=0; i<data.length; i++){
         time = data[i].ri.split('-');
-        info = time[i].split('/')[3];
+        info = time[0].split('/')[3];
         console.log(' ::::::: DB row info : ', info);
 
         time = time[1];
@@ -39,6 +39,7 @@ global.writeDataToShero = function(data){
         milsec = time.substring(14, 17);
 
         time = year + '-' + month + '-' + date + ' ' + hou + ':' + min + ':' + sec +'.' + milsec;
+        console.log('time------------------',time);
         if(info=='temp'){
             sql = 'insert into temperature(date_time,temperature,location) values('+'\''+ time + '\''+ ','+ String(data[i].con) + ',' + '\''+ String(data[0].cr) +'\'' + ')';
 		    console.log(":::::::::: DB row temp is inserted in temp ");
