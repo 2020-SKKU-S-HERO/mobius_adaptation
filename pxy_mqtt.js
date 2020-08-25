@@ -136,7 +136,7 @@ exports.mqtt_watchdog = function() {
                 req_sub();
                 reg_req_sub();
                 ctrl_sub();
-                ctrl_motor_sub();
+
                 //resp_sub();
                 mqtt_state = 'ready';
 
@@ -168,11 +168,7 @@ function ctrl_sub(){ //
     console.log('subscribe ctrl_topic as ' + ctrl_topic);
 }
 
-function ctrl_motor_sub(){ //
-    var ctrl_topic = 'ctrl/motor';
-    pxymqtt_client.subscribe(ctrl_topic);
-    console.log('subscribe ctrl_topic as ' + ctrl_topic);
-}
+
 
 function req_sub() {
     var req_topic = util.format('/oneM2M/req/+/%s/+', usecseid.replace('/', ''));
@@ -203,14 +199,7 @@ function mqtt_message_handler(topic, message) {
         pxymqtt_client.publish(topic+"/arduino", message);
         return;
     }
-    else if(topic=='ctrl/motor'){
-      console.log("hooN ctrl/motor mqtt received :::::::::::::::::::::");
-      console.log(message.toString());
-      //console.log(message.payload);
-      pxymqtt_client.publish(topic+"/arduino", message);
-      return;
 
-    }
 
     var topic_arr = topic.split("/");
 
