@@ -29,7 +29,7 @@ global.writeDataToShero = function(data){
 
     for(var i=0; i<data.length; i++){
         time = data[i].ri.split('-');
-        info = time[0].split('/')[3];
+        info = time[i].split('/')[3];
         console.log(' ::::::: DB row info : ', info);
 
         time = time[1];
