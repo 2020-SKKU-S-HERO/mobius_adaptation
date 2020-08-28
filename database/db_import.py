@@ -1,16 +1,20 @@
 import pandas as pd
 import pymysql.cursors
 
-data = pd.read_csv('testdata.csv', sep=',', header=0, names=['acid', 'caco3', 'co2', 'date'])
+data = pd.read_csv('CO2_emission_datasheet.csv', sep=',', header=0, names=['limestone', 'clay', 'silica_stone', 'iron_oxide', 'gypsum', 'coal', 'carbon_dioxide', 'date'])
 
 columns = ['acid', 'caco3', 'co2', 'date']
 
-"""
+
 for index, row in data.iterrows():
-    print('Acid(ml) : ', row['acid'])
-    print('CaCO3(g) : ', row['caco3'])
-    print('CO2 : ', row['co2'])
+    print('Limestone : ', row['limestone'])
+    print('Clay : ', row['clay'])
+    print('Silica_stone : ', row['silica_stone'])
     print('index : ', index)
+
+    if(index > 5):
+        break
+
 """
 
 testDB = pymysql.connect(
@@ -30,3 +34,4 @@ try:
     testDB.commit()
 finally:
     testDB.close()
+"""
