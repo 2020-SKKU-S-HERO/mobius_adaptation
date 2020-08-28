@@ -25,7 +25,7 @@ global.writeDataToShero = function(data){
     let ourdb_connection = mysql.createConnection(ourdb_connInfo);
     let sql = '';
 
-    let time, year, month, date, hou, min, sec, milsec;
+    let time, year, month, date, hou, min, sec, milsec, loc;
 
     for(var i=0; i<data.length; i++){
       console.log('i1-----------------------------',i);
@@ -40,23 +40,29 @@ global.writeDataToShero = function(data){
         milsec = time.substring(14, 17);
 
         time = year + '-' + month + '-' + date + ' ' + hou + ':' + min + ':' + sec +'.' + milsec;
-        console.log('time------------------',time);
+
+        if(data[i].cr=='Sdongwon')
+            loc = "서울";
+        else if(data[i].cr=='ShooN')
+            loc = '오산';
+        else
+            loc = '청주';
+
         if(info=='temp'){
-            sql = 'insert into temperature(date_time,temperature,location) values('+'\''+ time + '\''+ ','+ String(data[i].con) + ',' + '\''+ String(data[0].cr) +'\'' + ')';
+            sql = 'insert into temperature(date_time,temperature,location) values('+'\''+ time + '\''+ ','+ String(data[i].con) + ',' + '\''+ loc +'\'' + ')';
 		    console.log(":::::::::: DB row temp is inserted in temp ");
         }
         else if(info=='flowRate'){
-            sql = 'insert into flow_velocity(date_time,flow_velocity,location) values('+'\''+ time + '\''+ ','+ String(data[i].con) + ',' + '\''+ String(data[0].cr) +'\'' + ')';
+            sql = 'insert into flow_velocity(date_time,flow_velocity,location) values('+'\''+ time + '\''+ ','+ String(data[i].con) + ',' + '\''+ loc +'\'' + ')';
 		    console.log(":::::::::: DB row flowRate is inserted in flowRate ");
         }
         else{
-            sql = 'insert into co2_emissions(date_time,emissions,location) values('+'\''+ time + '\''+ ','+ String(data[i].con) + ',' + '\''+ String(data[0].cr) +'\'' + ')';
+            sql = 'insert into co2_emissions(date_time,emissions,location) values('+'\''+ time + '\''+ ','+ String(data[i].con) + ',' + '\''+ loc +'\'' + ')';
 		    console.log(":::::::::: DB row co2 is inserted in co2 ");
         }
-console.log('i2-----------------------------',i);
+
         ourdb_connection.query(sql, function(error, results, fields){
             if(error){
-              console.log('i3-----------------------------',i);
                 console.log('ERROR DETECTED ::::::::::::::::::::::', sql);
             }
             else{
