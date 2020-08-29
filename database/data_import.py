@@ -8,7 +8,7 @@ sheroDB = pymysql.connect(
 		password = 'shero',
 		database = 'sheroDB',
 		charset = 'utf8'
-		)
+)
 
 sheet = ['인천', '수원', '병점']
 
@@ -21,10 +21,10 @@ for loc in sheet:
 		for index, row in data.iterrows():
 			sql = "INSERT INTO input (date_time, location,limestone, clay, silica_stone, iron_oxide, gypsum, coal) VALUES ('"+str(row['date'])+"','"+ loc +"',"+str(row['limestone']) + ","+str(row['clay'])+","+str(row['silica_stone'])+ "," + str(row['iron_oxide']) + "," + str(row['gypsum']) + "," + str(row['coal']) + ");"
 #print(sql)            
-			cursor.execute(sql)
+		    cursor.execute(sql)
 			sql = "INSERT INTO co2_emissions (date_time, location, emissions) VALUES ('"+str(row['date'])+"','"+loc +"',"+str(row['carbon_dioxide']) + ");"
 			cursor.execute(sql)
-			sheroDB.commit()
+            sheroDB.commit()
 
 sheroDB.close()
 """
