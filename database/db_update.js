@@ -42,11 +42,11 @@ global.writeDataToShero = function(data){
         time = year + '-' + month + '-' + date + ' ' + hou + ':' + min + ':' + sec +'.' + milsec;
 
         if(data[i].cr=='Sdongwon')
-            loc = "서울";
+            loc = "인천";
         else if(data[i].cr=='ShooN')
-            loc = '오산';
+            loc = '수원';
         else
-            loc = '청주';
+            loc = '병점';
 
         if(info=='temp'){
             sql = 'insert into temperature(date_time,temperature,location) values('+'\''+ time + '\''+ ','+ String(data[i].con) + ',' + '\''+ loc +'\'' + ')';
