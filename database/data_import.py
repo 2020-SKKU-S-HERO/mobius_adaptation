@@ -26,7 +26,7 @@ for loc in sheet:
 			cursor.execute(sql)
 			sheroDB.commit()
 
-		sheroDB.close()
+sheroDB.close()
 """
 	for index, row in data.iterrows():
 		print('Limestone : ', row['limestone'])
