@@ -12,12 +12,12 @@ sheroDB = pymysql.connect(
 
 sheet = ['인천', '수원', '병점']
 
-for loc in sheet:
-	data = pd.read_excel('CO2_emission_datasheet.xlsx', sheet_name=loc,header=0,
-		names=['limestone', 'clay', 'silica_stone', 'iron_oxide', 'gypsum', 'coal', 'carbon_dioxide', 'date'])
 
-	try:
-		cursor = sheroDB.cursor()
+try:
+    cursor = sheroDB.cursor()
+    for loc in sheet:
+        data = pd.read_excel('CO2_emission_datasheet.xlsx', sheet_name=loc,header=0,
+		    names=['limestone', 'clay', 'silica_stone', 'iron_oxide', 'gypsum', 'coal', 'carbon_dioxide', 'date'])
 		for index, row in data.iterrows():
 			sql = "INSERT INTO input (date_time, location,limestone, clay, silica_stone, iron_oxide, gypsum, coal) VALUES ('"+str(row['date'])+"','"+ loc +"',"+str(row['limestone']) + ","+str(row['clay'])+","+str(row['silica_stone'])+ "," + str(row['iron_oxide']) + "," + str(row['gypsum']) + "," + str(row['coal']) + ");"
 #print(sql)            
@@ -25,8 +25,8 @@ for loc in sheet:
 			sql = "INSERT INTO co2_emissions (date_time, location, emissions) VALUES ('"+str(row['date'])+"','"+loc +"',"+str(row['carbon_dioxide']) + ");"
 			cursor.execute(sql)
             sheroDB.commit()
-
-sheroDB.close()
+finally:
+    sheroDB.close()
 """
 	for index, row in data.iterrows():
 		print('Limestone : ', row['limestone'])
