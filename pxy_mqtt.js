@@ -135,7 +135,8 @@ exports.mqtt_watchdog = function() {
             pxymqtt_client.on('connect', function () {
                 req_sub();
                 reg_req_sub();
-                ctrl_sub();
+                ctrl_main_sub();
+                ctrl_sub_sub();
 
                 //resp_sub();
                 mqtt_state = 'ready';
@@ -162,8 +163,14 @@ function resp_sub() {
     console.log('subscribe resp_topic as ' + resp_topic);
 }
 
-function ctrl_sub(){ //
-    var ctrl_topic = 'ctrl/서울/flow';
+function ctrl_main_sub(){ //
+    var ctrl_topic = 'ctrl/병점/main';
+    pxymqtt_client.subscribe(ctrl_topic);
+    console.log('subscribe ctrl_topic as ' + ctrl_topic);
+}
+
+function ctrl_sub_sub(){ //
+    var ctrl_topic = 'ctrl/병점/sub';
     pxymqtt_client.subscribe(ctrl_topic);
     console.log('subscribe ctrl_topic as ' + ctrl_topic);
 }
@@ -192,8 +199,16 @@ function reg_req_sub() {
 
 function mqtt_message_handler(topic, message) {
 
-    if(topic=='ctrl/서울/flow'){
-        console.log("hooN ctrl/서울/flow mqtt received :::::::::::::::::::::");
+    if(topic=='ctrl/병점/main'){
+        console.log("ctrl/병점/main mqtt received :::::::::::::::::::::");
+        console.log(message.toString());
+        //console.log(message.payload);
+        pxymqtt_client.publish(topic+"/arduino", message);
+        return;
+    }
+
+    if(topic=='ctrl/병점/sub'){
+        console.log("ctrl/병점/sub mqtt received :::::::::::::::::::::");
         console.log(message.toString());
         //console.log(message.payload);
         pxymqtt_client.publish(topic+"/arduino", message);
