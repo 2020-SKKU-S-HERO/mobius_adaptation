@@ -23,17 +23,26 @@ const ourdb_connInfo = {
 
 global.writeDataToShero = function (data) {
     let ourdb_connection = mysql.createConnection(ourdb_connInfo);
-    let sql = '';
+    let sql_ic = '';	let sql_bj = ''; let sql_sw = '';
+	let ic_co2_sum = 0;	let ic_co2_len = 0;	let ic_flow_sum = 0;	let ic_flow_len=0;
+	let bj_co2_sum = 0;	let bj_co2_len = 0;	let bj_flow_sum = 0;	let bj_flow_len=0;
+	let sw_co2_sum = 0;	let sw_co2_len = 0;	let sw_flow_sum = 0;	let sw_flow_len=0;
 
     let time, year, month, date, hou, min, sec, milsec, loc;
+	
+	console.log("length : ", data.length);
+	console.log("");
 
     for (var i = 0; i < data.length; i++) {
-        time = data[i].ri.split('-');
+        
+		time = data[i].ri.split('-');
         info = time[0].split('/')[3];
         //console.log('4. inserted info (mobius -> shero): ', info);
 
         time = time[1];
-        //console.log('before time : ', time);
+        
+		//==============TIME SHIFT
+		//console.log('before time : ', time);
         year = time.substring(0, 4); month = time.substring(4, 6);
         date = time.substring(6, 8); hou = time.substring(8, 10);
         min = time.substring(10, 12); sec = time.substring(12, 14);
@@ -52,8 +61,7 @@ global.writeDataToShero = function (data) {
                     month = month + 1;
                     if(month>12){
                         month = 1
-                        year = year + 1;
-                    }
+                        year = year + 1;}
                 }
             }    
             else if(month == 4 || month == 6 || month == 9 || month == 11){
@@ -78,13 +86,40 @@ global.writeDataToShero = function (data) {
 
         time = year + '-' + month + '-' + date + ' ' + hou + ':' + min + ':' + sec + '.' + milsec;
         
-        if (data[i].cr == 'Sdongwon')
+        if (data[i].cr == 'Sdongwon'){
             loc = "인천";
-        else if (data[i].cr == 'ShooN')
+			if(info=='flowRate'){
+				ic_flow_sum += parseInt(data[i].con);//String??
+				ic_flow_len += 1;
+			}
+			else if(info=='co2'){
+				ic_co2_sum += parseInt(data[i].con);
+				ic_flow_len += 1;
+			}
+		}
+        else if (data[i].cr == 'ShooN'){
             loc = '병점';
-        else
+			if(info=='flowRate'){
+				bj_flow_sum += parsesInt(data[i].con);
+				bj_flow_len += 1;
+			}
+			else if(info=='co2'){
+				bj_co2_sum += parseInt(data[i].con);
+				bj_co2_len += 1;
+			}
+		}
+        else{
             loc = '수원';
-
+			if(info=='flowRate'){
+				sw_flow_sum += parseInt(data[i].con);
+				sw_flow_len += 1;
+			}
+			else if(info=='co2'){
+				sw_co2_sum += parseInt(data[i].con);
+				sw_co2_len += 1;
+			}
+		}
+		/*
         if (info == 'temp') {
             sql = 'insert into temperature(date_time,temperature,location) values(' + '\'' + time + '\'' + ',' + String(data[i].con) + ',' + '\'' + loc + '\'' + ')';
             //console.log(":::::::::: DB row temp is inserted in temp ");
@@ -100,15 +135,16 @@ global.writeDataToShero = function (data) {
 
         ourdb_connection.query(sql, function (error, results, fields) {
             if (error) {
-                console.log('5. ERROR DETECTED when inserting info to sherdoDB', sql);
+                //console.log('5. ERROR DETECTED when inserting info to sherdoDB', sql);
             }
             else {
-                console.log('5. Successfully inserted into sheroDB with sql :', sql);
+                //console.log('5. Successfully inserted into sheroDB with sql :', sql);
                 //console.log('');
             }
         });
+		*/
     }
-
+	
     ourdb_connection.end();
 }
 
