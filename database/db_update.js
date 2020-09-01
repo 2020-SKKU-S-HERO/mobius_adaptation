@@ -33,7 +33,7 @@ global.writeDataToShero = function(data){
         console.log('4. inserted info (mobius -> shero): ', info);
 
         //time = time[1];
-        time = String(int(time[1])+32400);
+        time = String(parseInt(time[1])+32400);
         console.log('4. time: ', time);
         year = time.substring(0, 4);    month = time.substring(4, 6);
         date = time.substring(6, 8);    hou = time.substring(8, 10);
