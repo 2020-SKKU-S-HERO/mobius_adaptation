@@ -28,10 +28,9 @@ global.writeDataToShero = function(data){
     let time, year, month, date, hou, min, sec, milsec, loc;
 
     for(var i=0; i<data.length; i++){
-      console.log('i1-----------------------------',i);
         time = data[i].ri.split('-');
         info = time[0].split('/')[3];
-        console.log(' ::::::: DB row info : ', info);
+        console.log('4. inserted info (mobius -> shero): ', info);
 
         time = time[1];
         year = time.substring(0, 4);    month = time.substring(4, 6);
@@ -44,29 +43,29 @@ global.writeDataToShero = function(data){
         if(data[i].cr=='Sdongwon')
             loc = "인천";
         else if(data[i].cr=='ShooN')
-            loc = '수원';
-        else
             loc = '병점';
+        else
+            loc = '수원';
 
         if(info=='temp'){
             sql = 'insert into temperature(date_time,temperature,location) values('+'\''+ time + '\''+ ','+ String(data[i].con) + ',' + '\''+ loc +'\'' + ')';
-		    console.log(":::::::::: DB row temp is inserted in temp ");
+		    //console.log(":::::::::: DB row temp is inserted in temp ");
         }
         else if(info=='flowRate'){
             sql = 'insert into flow_velocity(date_time,flow_velocity,location) values('+'\''+ time + '\''+ ','+ String(data[i].con) + ',' + '\''+ loc +'\'' + ')';
-		    console.log(":::::::::: DB row flowRate is inserted in flowRate ");
+		    //console.log(":::::::::: DB row flowRate is inserted in flowRate ");
         }
         else{
             sql = 'insert into co2_emissions(date_time,emissions,location) values('+'\''+ time + '\''+ ','+ String(data[i].con) + ',' + '\''+ loc +'\'' + ')';
-		    console.log(":::::::::: DB row co2 is inserted in co2 ");
+		    //console.log(":::::::::: DB row co2 is inserted in co2 ");
         }
 
         ourdb_connection.query(sql, function(error, results, fields){
             if(error){
-                console.log('ERROR DETECTED ::::::::::::::::::::::', sql);
+                console.log('5. ERROR DETECTED when inserting info to sherdoDB', sql);
             }
             else{
-                console.log('Successss on write Data To Shero !!!!!!!!!!!!!!!!!!', sql);
+                console.log('5. Successfully inserted into sheroDB with sql :', sql);
                 console.log('');
             }
         });
@@ -79,7 +78,7 @@ global.getDataFromMobius = function(result){
     let mobius_connection = mysql.createConnection(mobius_connInfo);
 
     date = result[0].time
-    console.log(':::::::::: GET DATA FROM MOBIUS date : ', date);
+    console.log('Maximum date from sherodb : ', date);
     console.log('');
 
     year = String(date.getFullYear());  month = String(date.getMonth()+1);
@@ -96,7 +95,7 @@ global.getDataFromMobius = function(result){
     else if(milsec.length==2) milsec='0'+milsec;
 
     res = year + month + day + hou + minute + sec + milsec;
-    console.log('::::::::::::::: RES : ', res);
+    console.log('2. Converted date info (date_time -> 17 digit string) : ', res);
     console.log('');
 
     let sql = 'SELECT ri, con, cr FROM cin WHERE right(ri, 17) > '+ res;
@@ -104,16 +103,16 @@ global.getDataFromMobius = function(result){
     mobius_connection.query(sql, function(error, results, fields){
         if(!results){
             console.log('');
-            console.log('============== MOBIUS DATA NULL');
+            console.log('3. No matched ri with date string');
         }
         else{
+            //console.log('');
+            //console.log('SUCCESS on get Data From Mobius ********************', sql);
             console.log('');
-            console.log('SUCCESS on get Data From Mobius ********************', sql);
+            console.log('3. Date string matched result : ', results, 'and length : ',results.length);
             console.log('');
-            console.log('----------------------------- DATA FROM MOIBUS : ', results);
-            console.log('');
-            console.log('-------------------------------DATA LENGTH : ', results.length);
-            console.log('');
+            //console.log('-------------------------------DATA LENGTH : ', results.length);
+            //console.log('');
             if(results.length > 0)
                 writeDataToShero(results);
         }
@@ -129,7 +128,7 @@ exports.mobius_to_shero = function(){
     ourdb_connection.query('SELECT MAX(date_time) as time from co2_emissions', function(error, results, fields){
         if(error)throw error;
         else{
-            console.log('===================== results : ', results);
+            console.log('1. Getting Max(date_time) from existing SheroDB : ', results);
             console.log('');
             getDataFromMobius(results);
         }
