@@ -45,7 +45,7 @@ global.writeDataToShero = function(data){
         }
         else{
           hou = String(parseInt(hou)+9); //-9
-          day = String(parseInt(date);
+          day = String(parseInt(date));
         }
 
         time = year + '-' + month + '-' + date + ' ' + hou + ':' + min + ':' + sec +'.' + milsec;
