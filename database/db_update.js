@@ -84,20 +84,36 @@ global.getDataFromMobius = function(result){
     console.log('Maximum date from sherodb : ', date);
     console.log('');
 
-    year = String(date.getFullYear());  month = String(date.getMonth()+1);
-    day = String(date.getDate());   hou = String(date.getHours());
+    year = String(date.getFullYear());    
     minute = String(date.getMinutes());    sec = String(date.getSeconds());
     milsec = String(date.getMilliseconds());
-/*
-   if(date.getHours()-9<0){
-      hou = String(date.getHours()-9+24); //-9
-      day = String(date.getDate()-1);
-   }
-   else{
-     hou = String(date.getHours()-9); //-9
-     day = String(date.getDate());
-   }
-*/
+
+    month = date.getMonth()+1; 
+    day = date.getDate();
+    hou = date.getHours(); 
+    hou_c = 0;
+    if(date.getHours()<9){
+        hou_c = String(hou-9+24); //-9
+        if(day==1){
+            month = month-1;
+            if(month==1 || month==3 || month==5 || month==7 || month==8 || month==10 || month == 12)
+                day=31;
+            else if(month==4 || month==6 || month==9 || month==11)
+                day=30;
+            else
+                day=28;
+            month = String(month);
+            day = String(day);
+        }
+        else
+            day = String(day-1);
+      
+    }
+    else{
+        hou_c = String(hou-9); //-9
+        day = String(day);
+    }
+
     if(month.length==1) month='0'+month;
     if(day.length==1) day='0'+day;
     if(hou.length==1) hou='0'+hou;
@@ -106,8 +122,8 @@ global.getDataFromMobius = function(result){
     if(milsec.length==1) milsec='00'+milsec;
     else if(milsec.length==2) milsec='0'+milsec;
 
-    res = year + month + day + hou + minute + sec + milsec;
-    console.log('2. Converted date info (date_time -> 17 digit string) : ', res);
+    res = year + month + day + hou_c + minute + sec + milsec;
+    console.log('2. Converted date info (date_time -> 17 digit string) : ', res, hou);
     console.log('');
 
     let sql = 'SELECT ri, con, cr FROM cin WHERE right(ri, 17) > '+ res;
