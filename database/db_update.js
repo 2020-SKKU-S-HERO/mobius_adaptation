@@ -119,8 +119,10 @@ global.getDataFromMobius = function(result){
     if(milsec.length==1) milsec='00'+milsec;
     else if(milsec.length==2) milsec='0'+milsec;
 
-    res = year + month + day + hou + minute + sec + milsec;
+    res = year + month + day + hou_c + minute + sec + milsec;
     console.log('2. Converted date info (date_time -> 17 digit string) : ', res);
+    console.log('');
+    console.log(hou);
     console.log('');
 
     let sql = 'SELECT ri, con, cr FROM cin WHERE right(ri, 17) > '+ res;
