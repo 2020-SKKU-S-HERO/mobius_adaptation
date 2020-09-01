@@ -33,8 +33,9 @@ global.writeDataToShero = function(data){
         console.log('4. inserted info (mobius -> shero): ', info);
 
         //time = time[1];
+        console.log('before :',time[1]);
         time = String(parseInt(time[1])+32400);
-        console.log('4. time: ', time);
+        console.log('after time: ', time);
         year = time.substring(0, 4);    month = time.substring(4, 6);
         date = time.substring(6, 8);    hou = time.substring(8, 10);
         min = time.substring(10, 12);   sec = time.substring(12, 14);
@@ -84,7 +85,7 @@ global.getDataFromMobius = function(result){
     console.log('');
 
     year = String(date.getFullYear());  month = String(date.getMonth()+1);
-    day = String(date.getDate());   hou = String(date.getHours()); 
+    day = String(date.getDate());   hou = String(date.getHours());
     minute = String(date.getMinutes());    sec = String(date.getSeconds());
     milsec = String(date.getMilliseconds());
 /*
