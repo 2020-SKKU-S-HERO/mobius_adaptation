@@ -27,6 +27,8 @@ global.writeDataToShero = function (data) {
 	let ic_co2_sum = 0;	let ic_co2_len = 0;	let ic_flow_sum = 0;	let ic_flow_len=0;
 	let bj_co2_sum = 0;	let bj_co2_len = 0;	let bj_flow_sum = 0;	let bj_flow_len=0;
 	let sw_co2_sum = 0;	let sw_co2_len = 0;	let sw_flow_sum = 0;	let sw_flow_len=0;
+    let time_ic = '';   let time_bj = '';   let time_sw = '';
+    const AREA = 100;
 
     let time, year, month, date, hou, min, sec, milsec, loc;
 	
@@ -87,7 +89,6 @@ global.writeDataToShero = function (data) {
         time = year + '-' + month + '-' + date + ' ' + hou + ':' + min + ':' + sec + '.' + milsec;
         
         if (data[i].cr == 'Sdongwon'){
-            loc = "인천";
 			if(info=='flowRate'){
 				ic_flow_sum += parseInt(data[i].con);//String??
 				ic_flow_len += 1;
@@ -95,7 +96,8 @@ global.writeDataToShero = function (data) {
 			else if(info=='co2'){
 				ic_co2_sum += parseInt(data[i].con);
 				ic_flow_len += 1;
-			}
+            }
+            time_ic = time;
 		}
         else if (data[i].cr == 'ShooN'){
             loc = '병점';
@@ -106,7 +108,8 @@ global.writeDataToShero = function (data) {
 			else if(info=='co2'){
 				bj_co2_sum += parseInt(data[i].con);
 				bj_co2_len += 1;
-			}
+            }
+            time_bj = time;
 		}
         else{
             loc = '수원';
@@ -117,7 +120,8 @@ global.writeDataToShero = function (data) {
 			else if(info=='co2'){
 				sw_co2_sum += parseInt(data[i].con);
 				sw_co2_len += 1;
-			}
+            }
+            time_sw = time;
 		}
 		/*
         if (info == 'temp') {
@@ -144,7 +148,39 @@ global.writeDataToShero = function (data) {
         });
 		*/
     }
-	
+    emi_ic = (ic_flow_sum/ic_flow_len)*AREA*(ic_co2_sum/ic_co2_len);
+    sql_ic = 'insert into co2_emissions(date_time,emissions,location) values(' + '\'' + time_ic + '\'' + ',' + String(emi_ic) + ',\'인천\')';
+    emi_bj = (bj_flow_sum/bj_flow_len)*AREA*(bj_co2_sum/bj_co2_len);
+    sql_bj = 'insert into co2_emissions(date_time,emissions,location) values(' + '\'' + time_bj + '\'' + ',' + String(emi_bj) + ',\'병점\')';
+    emi_sw = (sw_flow_sum/sw_flow_len)*AREA*(sw_co2_sum/sw_co2_len);
+    sql_sw = 'insert into co2_emissions(date_time,emissions,location) values(' + '\'' + time_sw + '\'' + ',' + String(emi_sw) + ',\'수원\')';
+    ourdb_connection.query(sql_ic, function (error, results, fields) {
+        if (error) {
+            //console.log('5. ERROR DETECTED when inserting info to sherdoDB', sql);
+        }
+        else {
+            console.log('5. Successfully inserted into sheroDB with sql :', sql_ic);
+            console.log('');
+        }
+    });
+    ourdb_connection.query(sql_bj, function (error, results, fields) {
+        if (error) {
+            //console.log('5. ERROR DETECTED when inserting info to sherdoDB', sql);
+        }
+        else {
+            console.log('5. Successfully inserted into sheroDB with sql :', sql_bj);
+            console.log('');
+        }
+    });
+    ourdb_connection.query(sql_sw, function (error, results, fields) {
+        if (error) {
+            //console.log('5. ERROR DETECTED when inserting info to sherdoDB', sql);
+        }
+        else {
+            console.log('5. Successfully inserted into sheroDB with sql :', sql_sw);
+            console.log('');
+        }
+    });
     ourdb_connection.end();
 }
 
