@@ -34,7 +34,7 @@ global.writeDataToShero = function(data){
 
         //time = time[1];
         console.log('before :',time[1]);
-        time = String(parseInt(time[1])+32400+32400);
+        time = String(parseInt(time[1])+32400000);
         console.log('after time: ', time);
         year = time.substring(0, 4);    month = time.substring(4, 6);
         date = time.substring(6, 8);    hou = time.substring(8, 10);
