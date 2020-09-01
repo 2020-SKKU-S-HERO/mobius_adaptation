@@ -30,23 +30,14 @@ global.writeDataToShero = function(data){
     for(var i=0; i<data.length; i++){
         time = data[i].ri.split('-');
         info = time[0].split('/')[3];
-        console.log('4. inserted info (mobius -> shero): ', info);
+        //console.log('4. inserted info (mobius -> shero): ', info);
 
         time = time[1];
 
         year = time.substring(0, 4);    month = time.substring(4, 6);
-        date = time.substring(6, 8);    hou = String(parseInt(time.substring(8, 10))+9);
+        date = time.substring(6, 8);    hou = time.substring(8, 10);
         min = time.substring(10, 12);   sec = time.substring(12, 14);
         milsec = time.substring(14, 17);
-
-        if(parseInt(hou)>=24){
-           hou = String(parseInt(hou)+9-24); //-9
-           day = String(parseInt(date)+1);
-        }
-        else{
-          hou = String(parseInt(hou)+9); //-9
-          day = String(parseInt(date));
-        }
 
         time = year + '-' + month + '-' + date + ' ' + hou + ':' + min + ':' + sec +'.' + milsec;
 
