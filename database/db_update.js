@@ -40,7 +40,7 @@ console.log('before time : ',time);
         milsec = time.substring(14, 17);
 
         if(parseInt(hou)>=15){
-            hou_c = String(hou+9-24); //-9
+            hou = String(hou+9-24); //-9
             if(day==31){
                 month = month+1;
                 day=1;
@@ -51,7 +51,7 @@ console.log('before time : ',time);
                 day = String(day+1);
         }
         else{
-            hou_c = String(hou+9); //-9
+            hou = String(hou+9); //-9
             day = String(day);
         }
 
