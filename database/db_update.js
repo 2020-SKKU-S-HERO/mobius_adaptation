@@ -38,21 +38,23 @@ console.log('before time : ',time);
         date = time.substring(6, 8);    hou = time.substring(8, 10);
         min = time.substring(10, 12);   sec = time.substring(12, 14);
         milsec = time.substring(14, 17);
-
-        if(parseInt(hou)>=15){
+        hou = parseInt(hou);
+        date = parseInt(date);
+        month = parseInt(month);
+        if(hou>=15){
             hou = String(hou+9-24); //-9
-            if(day==31){
+            if(date==31){
                 month = month+1;
-                day=1;
+                date=1;
                 month = String(month);
-                day = String(day);
+                date = String(date);
             }
             else
-                day = String(day+1);
+                date = String(date+1);
         }
         else{
             hou = String(hou+9); //-9
-            day = String(day);
+            date = String(date);
         }
 
         time = year + '-' + month + '-' + date + ' ' + hou + ':' + min + ':' + sec +'.' + milsec;
