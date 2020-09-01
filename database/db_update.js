@@ -84,10 +84,10 @@ global.getDataFromMobius = function(result){
     console.log('');
 
     year = String(date.getFullYear());  month = String(date.getMonth()+1);
-    //day = String(date.getDate());   //hou = String(date.getHours()); //-9
+    day = String(date.getDate());   hou = String(date.getHours()); 
     minute = String(date.getMinutes());    sec = String(date.getSeconds());
     milsec = String(date.getMilliseconds());
-
+/*
    if(date.getHours()-9<0){
       hou = String(date.getHours()-9+24); //-9
       day = String(date.getDate()-1);
@@ -96,7 +96,7 @@ global.getDataFromMobius = function(result){
      hou = String(date.getHours()-9); //-9
      day = String(date.getDate());
    }
-
+*/
     if(month.length==1) month='0'+month;
     if(day.length==1) day='0'+day;
     if(hou.length==1) hou='0'+hou;
