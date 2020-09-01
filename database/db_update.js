@@ -34,7 +34,7 @@ global.writeDataToShero = function(data){
 
         time = time[1];
         year = time.substring(0, 4);    month = time.substring(4, 6);
-        date = time.substring(6, 8);    hou = time.substring(8, 10)+9;
+        date = time.substring(6, 8);    hou = time.substring(8, 10);
         min = time.substring(10, 12);   sec = time.substring(12, 14);
         milsec = time.substring(14, 17);
 
@@ -62,7 +62,7 @@ global.writeDataToShero = function(data){
 
         ourdb_connection.query(sql, function(error, results, fields){
             if(error){
-                console.log('5. ERROR DETECTED when inserting info to sherdoDB', sql);
+              //  console.log('5. ERROR DETECTED when inserting info to sherdoDB', sql);
             }
             else{
                 console.log('5. Successfully inserted into sheroDB with sql :', sql);
@@ -82,7 +82,7 @@ global.getDataFromMobius = function(result){
     console.log('');
 
     year = String(date.getFullYear());  month = String(date.getMonth()+1);
-    day = String(date.getDate());   hou = String(date.getHours()-9);
+    day = String(date.getDate());   hou = String(date.getHours()); //-9
     minute = String(date.getMinutes());    sec = String(date.getSeconds());
     milsec = String(date.getMilliseconds());
 
