@@ -39,7 +39,7 @@ global.writeDataToShero = function (data) {
         min = time.substring(10, 12); sec = time.substring(12, 14);
         milsec = time.substring(14, 17);
 
-        year = pareInt(year);   month = parseInt(month);
+        year = parseInt(year);   month = parseInt(month);
         hou = parseInt(hou);    date = parseInt(date);
         month = parseInt(month);
 
