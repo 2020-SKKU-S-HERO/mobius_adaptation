@@ -33,14 +33,30 @@ global.writeDataToShero = function(data){
         //console.log('4. inserted info (mobius -> shero): ', info);
 
         time = time[1];
-
+console.log('before time : ',time);
         year = time.substring(0, 4);    month = time.substring(4, 6);
         date = time.substring(6, 8);    hou = time.substring(8, 10);
         min = time.substring(10, 12);   sec = time.substring(12, 14);
         milsec = time.substring(14, 17);
 
-        time = year + '-' + month + '-' + date + ' ' + hou + ':' + min + ':' + sec +'.' + milsec;
+        if(parseInt(hou)>=15){
+            hou_c = String(hou+9-24); //-9
+            if(day==31){
+                month = month+1;
+                day=1;
+                month = String(month);
+                day = String(day);
+            }
+            else
+                day = String(day+1);
+        }
+        else{
+            hou_c = String(hou+9); //-9
+            day = String(day);
+        }
 
+        time = year + '-' + month + '-' + date + ' ' + hou + ':' + min + ':' + sec +'.' + milsec;
+console.log('after time : ',time);
         if(data[i].cr=='Sdongwon')
             loc = "인천";
         else if(data[i].cr=='ShooN')
@@ -66,8 +82,8 @@ global.writeDataToShero = function(data){
               //  console.log('5. ERROR DETECTED when inserting info to sherdoDB', sql);
             }
             else{
-                console.log('5. Successfully inserted into sheroDB with sql :', sql);
-                console.log('');
+                //console.log('5. Successfully inserted into sheroDB with sql :', sql);
+                //console.log('');
             }
         });
     }
