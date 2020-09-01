@@ -30,26 +30,35 @@ global.writeDataToShero = function(data){
     for(var i=0; i<data.length; i++){
         time = data[i].ri.split('-');
         info = time[0].split('/')[3];
-        console.log('4. inserted info (mobius -> shero): ', info);
+        //console.log('4. inserted info (mobius -> shero): ', info);
 
         time = time[1];
-
+console.log('before time : ',time);
         year = time.substring(0, 4);    month = time.substring(4, 6);
-        date = time.substring(6, 8);    hou = String(parseInt(time.substring(8, 10))+9);
+        date = time.substring(6, 8);    hou = time.substring(8, 10);
         min = time.substring(10, 12);   sec = time.substring(12, 14);
         milsec = time.substring(14, 17);
-
-        if(parseInt(hou)>=24){
-           hou = String(parseInt(hou)+9-24); //-9
-           day = String(parseInt(date)+1);
+        hou = parseInt(hou);
+        date = parseInt(date);
+        month = parseInt(month);
+        if(hou>=15){
+            hou = String(hou+9-24); //-9
+            if(date==31){
+                month = month+1;
+                date=1;
+                month = String(month);
+                date = String(date);
+            }
+            else
+                date = String(date+1);
         }
         else{
-          hou = String(parseInt(hou)+9); //-9
-          day = String(parseInt(date));
+            hou = String(hou+9); //-9
+            date = String(date);
         }
 
         time = year + '-' + month + '-' + date + ' ' + hou + ':' + min + ':' + sec +'.' + milsec;
-
+console.log('after time : ',time);
         if(data[i].cr=='Sdongwon')
             loc = "인천";
         else if(data[i].cr=='ShooN')
@@ -75,8 +84,8 @@ global.writeDataToShero = function(data){
               //  console.log('5. ERROR DETECTED when inserting info to sherdoDB', sql);
             }
             else{
-                console.log('5. Successfully inserted into sheroDB with sql :', sql);
-                console.log('');
+                //console.log('5. Successfully inserted into sheroDB with sql :', sql);
+                //console.log('');
             }
         });
     }
@@ -88,39 +97,38 @@ global.getDataFromMobius = function(result){
     let mobius_connection = mysql.createConnection(mobius_connInfo);
 
     date = result[0].time
-    console.log('Maximum date from sherodb : ', date);
-    console.log('');
+  console.log('Maximum date from sherodb : ', date);
+  console.log('');
 
-    year = String(date.getFullYear());    
-    minute = String(date.getMinutes());    sec = String(date.getSeconds());
-    milsec = String(date.getMilliseconds());
+  year = String(date.getFullYear());
+  minute = String(date.getMinutes());    sec = String(date.getSeconds());
+  milsec = String(date.getMilliseconds());
 
-    month = date.getMonth()+1; 
-    day = date.getDate();
-    hou = date.getHours(); 
-    hou_c = 0;
-    if(date.getHours()<9){
-        hou_c = String(hou-9+24); //-9
-        if(day==1){
-            month = month-1;
-            if(month==1 || month==3 || month==5 || month==7 || month==8 || month==10 || month == 12)
-                day=31;
-            else if(month==4 || month==6 || month==9 || month==11)
-                day=30;
-            else
-                day=28;
-            month = String(month);
-            day = String(day);
-        }
-        else
-            day = String(day-1);
-      
-    }
-    else{
-        hou_c = String(hou-9); //-9
-        day = String(day);
-    }
+  month = date.getMonth()+1;
+  day = date.getDate();
+  hou = date.getHours();
+  hou_c = 0;
+  if(date.getHours()<9){
+      hou_c = String(hou-9+24); //-9
+      if(day==1){
+          month = month-1;
+          if(month==1 || month==3 || month==5 || month==7 || month==8 || month==10 || month == 12)
+              day=31;
+          else if(month==4 || month==6 || month==9 || month==11)
+              day=30;
+          else
+              day=28;
+          month = String(month);
+          day = String(day);
+      }
+      else
+          day = String(day-1);
 
+  }
+  else{
+      hou_c = String(hou-9); //-9
+      day = String(day);
+  }
     if(month.length==1) month='0'+month;
     if(day.length==1) day='0'+day;
     if(hou.length==1) hou='0'+hou;
@@ -130,7 +138,9 @@ global.getDataFromMobius = function(result){
     else if(milsec.length==2) milsec='0'+milsec;
 
     res = year + month + day + hou_c + minute + sec + milsec;
-    console.log('2. Converted date info (date_time -> 17 digit string) : ', res, hou);
+    console.log('2. Converted date info (date_time -> 17 digit string) : ', res);
+    console.log('');
+    console.log(hou);
     console.log('');
 
     let sql = 'SELECT ri, con, cr FROM cin WHERE right(ri, 17) > '+ res;
