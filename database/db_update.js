@@ -102,7 +102,7 @@ global.writeDataToShero = function (data) {
         else if (data[i].cr == 'ShooN'){
             loc = '병점';
 			if(info=='flowRate'){
-				bj_flow_sum += parsesInt(data[i].con);
+				bj_flow_sum += parseInt(data[i].con);
 				bj_flow_len += 1;
 			}
 			else if(info=='co2'){
@@ -165,7 +165,7 @@ global.writeDataToShero = function (data) {
     });*/
     ourdb_connection.query(sql_bj, function (error, results, fields) {
         if (error) {
-            //console.log('5. ERROR DETECTED when inserting info to sherdoDB', sql);
+            console.log('5. ERROR DETECTED when inserting info to sherdoDB', sql_bj);
         }
         else {
             console.log('5. Successfully inserted into sheroDB with sql :', sql_bj);
