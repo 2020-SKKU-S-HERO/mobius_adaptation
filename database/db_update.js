@@ -151,7 +151,13 @@ global.writeDataToShero = function (data) {
     //emi_ic = (ic_flow_sum/ic_flow_len)*AREA*(ic_co2_sum/ic_co2_len);
     //sql_ic = 'insert into co2_emissions(date_time,emissions,location) values(' + '\'' + time_ic + '\'' + ',' + String(emi_ic) + ',\'인천\')';
     emi_bj = (bj_flow_sum/bj_flow_len)*AREA*(bj_co2_sum/bj_co2_len);
-    sql_bj = 'insert into co2_emissions(date_time,emissions,location) values(' + '\'' + time_bj + '\'' + ',' + String(emi_bj) + ',\'병점\')';
+    if(emi_bj==0){
+      sql_bj = 'insert into co2_emissions(date_time,emissions,location) values(' + '\'' + time_bj + '\'' + ',' + "0" + ',\'병점\')';
+    }
+    else{
+      sql_bj = 'insert into co2_emissions(date_time,emissions,location) values(' + '\'' + time_bj + '\'' + ',' + String(emi_bj) + ',\'병점\')';
+    }
+
     //emi_sw = (sw_flow_sum/sw_flow_len)*AREA*(sw_co2_sum/sw_co2_len);
     //sql_sw = 'insert into co2_emissions(date_time,emissions,location) values(' + '\'' + time_sw + '\'' + ',' + String(emi_sw) + ',\'수원\')';
   /*  ourdb_connection.query(sql_ic, function (error, results, fields) {
