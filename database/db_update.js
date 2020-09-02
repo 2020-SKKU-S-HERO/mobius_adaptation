@@ -31,18 +31,18 @@ global.writeDataToShero = function (data) {
     const AREA = 100;
 
     let time, year, month, date, hou, min, sec, milsec, loc;
-	
+
 	console.log("length : ", data.length);
 	console.log("");
 
     for (var i = 0; i < data.length; i++) {
-        
+
 		time = data[i].ri.split('-');
         info = time[0].split('/')[3];
         //console.log('4. inserted info (mobius -> shero): ', info);
 
         time = time[1];
-        
+
 		//==============TIME SHIFT
 		//console.log('before time : ', time);
         year = time.substring(0, 4); month = time.substring(4, 6);
@@ -65,7 +65,7 @@ global.writeDataToShero = function (data) {
                         month = 1
                         year = year + 1;}
                 }
-            }    
+            }
             else if(month == 4 || month == 6 || month == 9 || month == 11){
                 if(date>30){
                     date = 1;
@@ -81,13 +81,13 @@ global.writeDataToShero = function (data) {
         }
         else
             hou = hou + 9; //-9
-        
+
         year = String(year);    month = String(month);
         hou = String(hou);  date = String(date);
         month = String(month);
 
         time = year + '-' + month + '-' + date + ' ' + hou + ':' + min + ':' + sec + '.' + milsec;
-        
+
         if (data[i].cr == 'Sdongwon'){
 			if(info=='flowRate'){
 				ic_flow_sum += parseInt(data[i].con);//String??
@@ -148,13 +148,13 @@ global.writeDataToShero = function (data) {
         });
 		*/
     }
-    emi_ic = (ic_flow_sum/ic_flow_len)*AREA*(ic_co2_sum/ic_co2_len);
-    sql_ic = 'insert into co2_emissions(date_time,emissions,location) values(' + '\'' + time_ic + '\'' + ',' + String(emi_ic) + ',\'인천\')';
+    //emi_ic = (ic_flow_sum/ic_flow_len)*AREA*(ic_co2_sum/ic_co2_len);
+    //sql_ic = 'insert into co2_emissions(date_time,emissions,location) values(' + '\'' + time_ic + '\'' + ',' + String(emi_ic) + ',\'인천\')';
     emi_bj = (bj_flow_sum/bj_flow_len)*AREA*(bj_co2_sum/bj_co2_len);
     sql_bj = 'insert into co2_emissions(date_time,emissions,location) values(' + '\'' + time_bj + '\'' + ',' + String(emi_bj) + ',\'병점\')';
-    emi_sw = (sw_flow_sum/sw_flow_len)*AREA*(sw_co2_sum/sw_co2_len);
-    sql_sw = 'insert into co2_emissions(date_time,emissions,location) values(' + '\'' + time_sw + '\'' + ',' + String(emi_sw) + ',\'수원\')';
-    ourdb_connection.query(sql_ic, function (error, results, fields) {
+    //emi_sw = (sw_flow_sum/sw_flow_len)*AREA*(sw_co2_sum/sw_co2_len);
+    //sql_sw = 'insert into co2_emissions(date_time,emissions,location) values(' + '\'' + time_sw + '\'' + ',' + String(emi_sw) + ',\'수원\')';
+  /*  ourdb_connection.query(sql_ic, function (error, results, fields) {
         if (error) {
             //console.log('5. ERROR DETECTED when inserting info to sherdoDB', sql);
         }
@@ -162,7 +162,7 @@ global.writeDataToShero = function (data) {
             console.log('5. Successfully inserted into sheroDB with sql :', sql_ic);
             console.log('');
         }
-    });
+    });*/
     ourdb_connection.query(sql_bj, function (error, results, fields) {
         if (error) {
             //console.log('5. ERROR DETECTED when inserting info to sherdoDB', sql);
@@ -172,7 +172,7 @@ global.writeDataToShero = function (data) {
             console.log('');
         }
     });
-    ourdb_connection.query(sql_sw, function (error, results, fields) {
+/*    ourdb_connection.query(sql_sw, function (error, results, fields) {
         if (error) {
             //console.log('5. ERROR DETECTED when inserting info to sherdoDB', sql);
         }
@@ -180,7 +180,7 @@ global.writeDataToShero = function (data) {
             console.log('5. Successfully inserted into sheroDB with sql :', sql_sw);
             console.log('');
         }
-    });
+    });*/
     ourdb_connection.end();
 }
 
@@ -233,7 +233,7 @@ global.getDataFromMobius = function (result) {
     res = year + month + day + hou + minute + sec + milsec;
     //console.log('2. Converted date info (date_time -> 17 digit string) : ', res);
     //console.log('');
-    
+
     let sql = 'SELECT ri, con, cr FROM cin WHERE right(ri, 17) > ' + res;
 
     mobius_connection.query(sql, function (error, results, fields) {
