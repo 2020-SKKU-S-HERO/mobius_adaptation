@@ -23,12 +23,13 @@ const ourdb_connInfo = {
 
 global.writeDataToShero = function (data) {
     let ourdb_connection = mysql.createConnection(ourdb_connInfo);
-    let sql_ic = '';	let sql_bj = ''; let sql_sw = '';
-	let ic_co2_sum = 0;	let ic_co2_len = 0;	let ic_flow_sum = 0;	let ic_flow_len=0;
-	let bj_co2_sum = 0;	let bj_co2_len = 0;	let bj_flow_sum = 0;	let bj_flow_len=0;
-	let sw_co2_sum = 0;	let sw_co2_len = 0;	let sw_flow_sum = 0;	let sw_flow_len=0;
-    let time_ic = '';   let time_bj = '';   let time_sw = '';
-    const AREA = 100;
+    let sql_ic, sql_bj, sql_sw;
+	let time_ic, time_bj, time_sw;
+	let ic_co2_sum, ic_co2_len, ic_flow_sum, ic_flow_len;
+	let bj_co2_sum=0, bj_co2_len=0, bj_flow_sum=0, bj_flow_len=0;
+	let sw_co2_sum, sw_co2_len, sw_flow_sum, sw_flow_len=0;
+    let emi_bj = 0;
+	let AREA = 100;
 
     let time, year, month, date, hou, min, sec, milsec, loc;
 
@@ -36,15 +37,13 @@ global.writeDataToShero = function (data) {
 	console.log("");
 
     for (var i = 0; i < data.length; i++) {
-
+		
+		if(i<20)
+			console.log(data[i]);
 		time = data[i].ri.split('-');
         info = time[0].split('/')[3];
-        //console.log('4. inserted info (mobius -> shero): ', info);
-
         time = time[1];
 
-		//==============TIME SHIFT
-		//console.log('before time : ', time);
         year = time.substring(0, 4); month = time.substring(4, 6);
         date = time.substring(6, 8); hou = time.substring(8, 10);
         min = time.substring(10, 12); sec = time.substring(12, 14);
@@ -53,7 +52,8 @@ global.writeDataToShero = function (data) {
         year = parseInt(year);   month = parseInt(month);
         hou = parseInt(hou);    date = parseInt(date);
         month = parseInt(month);
-
+		
+		//TIME SHIFT
         if (hou >= 15) {
             hou = String(hou + 9 - 24); //-9
             date = date + 1;
@@ -84,8 +84,15 @@ global.writeDataToShero = function (data) {
 
         year = String(year);    month = String(month);
         hou = String(hou);  date = String(date);
-        month = String(month);
-
+    
+		if(month.length==1) month = '0'+month;
+		if(hou.length==1) hou = '0'+hou;
+		if(date.length==1) date = '0'+date;
+		if(hou.length==1) hou = '0'+hou;
+		if(min.length==1) min = '0'+min;
+		if(sec.length==1) sec = '0'+sec;
+		if(milsec.length==1) milsec = '00'+milsec;
+		else if(milsec.length==2) milsec = '0'+milsec;
         time = year + '-' + month + '-' + date + ' ' + hou + ':' + min + ':' + sec + '.' + milsec;
 
         if (data[i].cr == 'Sdongwon'){
@@ -102,12 +109,18 @@ global.writeDataToShero = function (data) {
         else if (data[i].cr == 'ShooN'){
             loc = '병점';
 			if(info=='flowRate'){
-				bj_flow_sum += parseInt(data[i].con);
-				bj_flow_len += 1;
+				bj_flow_sum = bj_flow_sum+parseInt(data[i].con);
+				bj_flow_len = bj_flow_len + 1;
+				console.log('병점 ::: flow', bj_flow_sum);
+				console.log('');
 			}
 			else if(info=='co2'){
-				bj_co2_sum += parseInt(data[i].con);
+				bj_co2_sum = bj_co2_sum + parseInt(data[i].con);
+				console.log(parseInt(data[i].con));
 				bj_co2_len += 1;
+				console.log('병점 ::: co2   ');
+				console.log(bj_co2_sum);
+				console.log('');
             }
             time_bj = time;
 		}
@@ -158,6 +171,8 @@ global.writeDataToShero = function (data) {
       sql_bj = 'insert into co2_emissions(date_time,emissions,location) values(' + '\'' + time_bj + '\'' + ',' + String(emi_bj) + ',\'병점\')';
     }
 
+	console.log(":::::::::co2 emmision: ",emi_bj);
+
     //emi_sw = (sw_flow_sum/sw_flow_len)*AREA*(sw_co2_sum/sw_co2_len);
     //sql_sw = 'insert into co2_emissions(date_time,emissions,location) values(' + '\'' + time_sw + '\'' + ',' + String(emi_sw) + ',\'수원\')';
   /*  ourdb_connection.query(sql_ic, function (error, results, fields) {
@@ -196,6 +211,10 @@ global.getDataFromMobius = function (result) {
     date = result[0].time
     console.log('Maximum date from sherodb : ', date);
     console.log('');
+	if(date==null)
+		date = new Date(0);
+	console.log('Modify on date : ', date);
+	console.log('');
 
     minute = String(date.getMinutes()); sec = String(date.getSeconds());
     milsec = String(date.getMilliseconds());
