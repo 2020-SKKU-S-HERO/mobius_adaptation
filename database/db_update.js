@@ -33,13 +33,10 @@ global.writeDataToShero = function (data) {
 
     let time, year, month, date, hou, min, sec, milsec, loc;
 
-	console.log("length : ", data.length);
-	console.log("");
-
     for (var i = 0; i < data.length; i++) {
 		
-		if(i<20)
-			console.log(data[i]);
+		//if(i<20)
+		//	console.log(data[i]);
 		time = data[i].ri.split('-');
         info = time[0].split('/')[3];
         time = time[1];
@@ -118,8 +115,7 @@ global.writeDataToShero = function (data) {
 				bj_co2_sum = bj_co2_sum + parseInt(data[i].con);
 				console.log(parseInt(data[i].con));
 				bj_co2_len += 1;
-				console.log('병점 ::: co2   ');
-				console.log(bj_co2_sum);
+				console.log('병점 ::: co2   ', bj_co2_sum);
 				console.log('');
             }
             time_bj = time;
@@ -163,15 +159,22 @@ global.writeDataToShero = function (data) {
     }
     //emi_ic = (ic_flow_sum/ic_flow_len)*AREA*(ic_co2_sum/ic_co2_len);
     //sql_ic = 'insert into co2_emissions(date_time,emissions,location) values(' + '\'' + time_ic + '\'' + ',' + String(emi_ic) + ',\'인천\')';
-    emi_bj = (bj_flow_sum/bj_flow_len)*AREA*(bj_co2_sum/bj_co2_len);
-    if(emi_bj==0){
-      sql_bj = 'insert into co2_emissions(date_time,emissions,location) values(' + '\'' + time_bj + '\'' + ',' + "0" + ',\'병점\')';
-    }
+    emi_bj = String((bj_flow_sum/bj_flow_len)*AREA*(bj_co2_sum/bj_co2_len));
+    if(emi_bj== 'NaN'){
+		console.log("5. Failed to construct sql : NO FLOWRATE DATA \n");
+	}
     else{
-      sql_bj = 'insert into co2_emissions(date_time,emissions,location) values(' + '\'' + time_bj + '\'' + ',' + String(emi_bj) + ',\'병점\')';
+		sql_bj = 'insert into co2_emissions(date_time,emissions,location) values(' + '\'' + time_bj + '\'' + ',' + emi_bj + ',\'병점\')';
+		ourdb_connection.query(sql_bj, function(error, results, fields){
+			if(error)	console.log('5. ERRO DETETED when inserting info to sheroDB', sql_bj);
+			else{
+				console.log('5. Successfully inserted into sheroDB with sql : ', sql_bj);
+				console.log('');
+			}
+		});
     }
 
-	console.log(":::::::::co2 emmision: ",emi_bj);
+	//console.log(":::::::::co2 emmision: ",emi_bj);
 
     //emi_sw = (sw_flow_sum/sw_flow_len)*AREA*(sw_co2_sum/sw_co2_len);
     //sql_sw = 'insert into co2_emissions(date_time,emissions,location) values(' + '\'' + time_sw + '\'' + ',' + String(emi_sw) + ',\'수원\')';
@@ -184,15 +187,6 @@ global.writeDataToShero = function (data) {
             console.log('');
         }
     });*/
-    ourdb_connection.query(sql_bj, function (error, results, fields) {
-        if (error) {
-            console.log('5. ERROR DETECTED when inserting info to sherdoDB', sql_bj);
-        }
-        else {
-            console.log('5. Successfully inserted into sheroDB with sql :', sql_bj);
-            console.log('');
-        }
-    });
 /*    ourdb_connection.query(sql_sw, function (error, results, fields) {
         if (error) {
             //console.log('5. ERROR DETECTED when inserting info to sherdoDB', sql);
@@ -209,22 +203,16 @@ global.getDataFromMobius = function (result) {
     let mobius_connection = mysql.createConnection(mobius_connInfo);
 
     date = result[0].time
-    console.log('Maximum date from sherodb : ', date);
-    console.log('');
 	if(date==null)
 		date = new Date(0);
-	console.log('Modify on date : ', date);
-	console.log('');
 
-    minute = String(date.getMinutes()); sec = String(date.getSeconds());
-    milsec = String(date.getMilliseconds());
-
+    minute = date.getMinutes(); sec = date.getSeconds();
+    milsec = date.getMilliseconds();
     year = date.getFullYear();  month = date.getMonth() + 1;
     day = date.getDate();   hou = date.getHours();
-    hou = 0;
 
-    if (date.getHours() < 9) {
-        hou = String(hou - 9 + 24); //-9
+    if (hou < 9) {
+        hou = hou - 9 + 24; //-9
         if (day == 1) {
             month = month - 1;
             if (month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10)
@@ -237,16 +225,21 @@ global.getDataFromMobius = function (result) {
             }
             else
                 day = 28;
-            month = String(month);
-            day = String(day);
+            month = month;
+            day = day;
         }
         else
-            day = String(day - 1);
+            day = day - 1;
     }
     else {
-        hou = String(hou - 9); //-9
-        day = String(day);
+        hou = hou - 9; //-9
+        day = day;
     }
+
+	year = String(year);	month = String(month);	day = String(day);
+	hou = String(hou);		minute = String(minute);	sec=String(sec);
+	milsec = String(milsec);
+
     if (month.length == 1) month = '0' + month;
     if (day.length == 1) day = '0' + day;
     if (hou.length == 1) hou = '0' + hou;
@@ -267,11 +260,8 @@ global.getDataFromMobius = function (result) {
             console.log('3. No matched ri with date string');
         }
         else {
-            //console.log('');
-            //console.log('3. Date string matched result : ', results, 'and length : ', results.length);
-            //console.log('');
-            //console.log('-------------------------------DATA LENGTH : ', results.length);
-            //console.log('');
+            console.log('3. Date string matched result : ', sql, 'and length : ', results.length);
+            console.log('');
             if (results.length > 0)
                 writeDataToShero(results);
         }
