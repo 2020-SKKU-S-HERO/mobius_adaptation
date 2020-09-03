@@ -135,7 +135,8 @@ global.writeDataToShero = function (data) {
     }
     //emi_ic = (ic_flow_sum/ic_flow_len)*AREA*(ic_co2_sum/ic_co2_len);
     //sql_ic = 'insert into co2_emissions(date_time,emissions,location) values(' + '\'' + time_ic + '\'' + ',' + String(emi_ic) + ',\'인천\')';
-    emi_bj = String((bj_flow_sum/bj_flow_len)*AREA*(bj_co2_sum/bj_co2_len));
+    emi_bj = String((bj_flow_sum/bj_flow_len)*AREA*(bj_co2_sum/bj_co2_len)*6/100000);
+	//Considering second rewrite the formula
     if(emi_bj== 'NaN'){
 		console.log("5. Failed to construct sql : NO FLOWRATE DATA \n");
 	}
