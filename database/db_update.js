@@ -132,30 +132,6 @@ global.writeDataToShero = function (data) {
             }
             time_sw = time;
 		}
-		/*
-        if (info == 'temp') {
-            sql = 'insert into temperature(date_time,temperature,location) values(' + '\'' + time + '\'' + ',' + String(data[i].con) + ',' + '\'' + loc + '\'' + ')';
-            //console.log(":::::::::: DB row temp is inserted in temp ");
-        }
-        else if (info == 'flowRate') {
-            sql = 'insert into flow_velocity(date_time,flow_velocity,location) values(' + '\'' + time + '\'' + ',' + String(data[i].con) + ',' + '\'' + loc + '\'' + ')';
-            //console.log(":::::::::: DB row flowRate is inserted in flowRate ");
-        }
-        else {
-            sql = 'insert into co2_emissions(date_time,emissions,location) values(' + '\'' + time + '\'' + ',' + String(data[i].con) + ',' + '\'' + loc + '\'' + ')';
-            //console.log(":::::::::: DB row co2 is inserted in co2 ");
-        }
-
-        ourdb_connection.query(sql, function (error, results, fields) {
-            if (error) {
-                //console.log('5. ERROR DETECTED when inserting info to sherdoDB', sql);
-            }
-            else {
-                //console.log('5. Successfully inserted into sheroDB with sql :', sql);
-                //console.log('');
-            }
-        });
-		*/
     }
     //emi_ic = (ic_flow_sum/ic_flow_len)*AREA*(ic_co2_sum/ic_co2_len);
     //sql_ic = 'insert into co2_emissions(date_time,emissions,location) values(' + '\'' + time_ic + '\'' + ',' + String(emi_ic) + ',\'인천\')';
@@ -173,8 +149,6 @@ global.writeDataToShero = function (data) {
 			}
 		});
     }
-
-	//console.log(":::::::::co2 emmision: ",emi_bj);
 
     //emi_sw = (sw_flow_sum/sw_flow_len)*AREA*(sw_co2_sum/sw_co2_len);
     //sql_sw = 'insert into co2_emissions(date_time,emissions,location) values(' + '\'' + time_sw + '\'' + ',' + String(emi_sw) + ',\'수원\')';
