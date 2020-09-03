@@ -29,7 +29,7 @@ global.writeDataToShero = function (data) {
 	let bj_co2_sum=0, bj_co2_len=0, bj_flow_sum=0, bj_flow_len=0;
 	let sw_co2_sum=0, sw_co2_len=0, sw_flow_sum=0, sw_flow_len=0;
     let emi_bj = 0;
-	const AREA = 100;
+	const AREA = 38.48;
 	let limestone=0, gypsum=0, clay=0, coal=0, silica_stone=0, iron_oxide=0;
 
     let time, year, month, date, hou, min, sec, milsec, loc;
@@ -109,14 +109,14 @@ global.writeDataToShero = function (data) {
 			if(info=='flowRate'){
 				bj_flow_sum = bj_flow_sum+parseInt(data[i].con);
 				bj_flow_len = bj_flow_len + 1;
-				console.log('병점 ::: flow', bj_flow_sum);
+				console.log('병점 ::: flow', bj_flow_sum, ' ::: length : ', bj_flow_len);
 				console.log('');
 			}
 			else if(info=='co2'){
 				bj_co2_sum = bj_co2_sum + parseInt(data[i].con);
 				console.log(parseInt(data[i].con));
 				bj_co2_len += 1;
-				console.log('병점 ::: co2   ', bj_co2_sum);
+				console.log('병점 ::: co2   ', bj_co2_sum, '::: length : ', bj_co2_len);
 				console.log('');
             }
             time_bj = time;
@@ -138,9 +138,12 @@ global.writeDataToShero = function (data) {
     //sql_ic = 'insert into co2_emissions(date_time,emissions,location) values(' + '\'' + time_ic + '\'' + ',' + String(emi_ic) + ',\'인천\')';
 	const mini=0.97, max=1.03;
 	emi_bj = (bj_flow_sum/bj_flow_len)*AREA*(bj_co2_sum/bj_co2_len)*6/100000;
-	limestone = emi_bj*1.15*Math.random()*(max-mini)+mini;	gypsum=emi_bj*0.03*Math.random()*(max-mini)+mini;
-	clay=emi_bj*0.22*Math.random()*(max-mini)+mini;	coal = emi_bj*0.12*Math.random()*(max-mini)+mini;
-	silica_stone=emi_bj*0.05*Math.random()*(max-mini)+mini;	iron_oxide = emi_bj*0.03*Math.random()*(max-mini)+mini;
+	limestone = String(emi_bj*1.15*(Math.random()*(max-mini)+mini));
+	gypsum = String(emi_bj*0.03*(Math.random()*(max-mini)+mini));
+	clay= String(emi_bj*0.22*(Math.random()*(max-mini)+mini));
+	coal = String(emi_bj*0.12*(Math.random()*(max-mini)+mini));
+	silica_stone= String(emi_bj*0.05*(Math.random()*(max-mini)+mini));
+	iron_oxide = String(emi_bj*0.03*(Math.random()*(max-mini)+mini));
 
 	console.log(emi_bj, ' ::: ', limestone, ' ::: ', gypsum, ' ::: ', clay);
 
@@ -150,7 +153,7 @@ global.writeDataToShero = function (data) {
 		console.log("5. Failed to construct sql : NO FLOWRATE DATA \n");
 	}
     else{
-		sql_bj = 'insert into co2_emissions(date_time,emissions,location) values(' + '\'' + time_bj + '\'' + ',' + emi_bj + ',\'병점\')';
+		sql_bj = 'insert into co2_emissions(date_time,emissions,location, limestone, clay, silica_stone, iron_oxide, gypsum, coal) values(' + '\'' + time_bj + '\'' + ',' + emi_bj + ',\'병점\','+limestone+','+clay+','+silica_stone+','+iron_oxide+','+gypsum+','+coal+')';
 		ourdb_connection.query(sql_bj, function(error, results, fields){
 			if(error)	console.log('5. ERROR DETETED when inserting info to sheroDB', sql_bj);
 			else{
