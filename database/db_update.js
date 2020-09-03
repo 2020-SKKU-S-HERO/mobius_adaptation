@@ -25,11 +25,12 @@ global.writeDataToShero = function (data) {
     let ourdb_connection = mysql.createConnection(ourdb_connInfo);
     let sql_ic, sql_bj, sql_sw;
 	let time_ic, time_bj, time_sw;
-	let ic_co2_sum, ic_co2_len, ic_flow_sum, ic_flow_len;
+	let ic_co2_sum=0, ic_co2_len=0, ic_flow_sum=0, ic_flow_len=0;
 	let bj_co2_sum=0, bj_co2_len=0, bj_flow_sum=0, bj_flow_len=0;
-	let sw_co2_sum, sw_co2_len, sw_flow_sum, sw_flow_len=0;
+	let sw_co2_sum=0, sw_co2_len=0, sw_flow_sum=0, sw_flow_len=0;
     let emi_bj = 0;
-	let AREA = 100;
+	const AREA = 100;
+	let limestone=0, gypsum=0, clay=0, coal=0, silica_stone=0, iron_oxide=0;
 
     let time, year, month, date, hou, min, sec, milsec, loc;
 
@@ -52,7 +53,7 @@ global.writeDataToShero = function (data) {
 		
 		//TIME SHIFT
         if (hou >= 15) {
-            hou = String(hou + 9 - 24); //-9
+            hou = hou + 9 - 24; //-9
             date = date + 1;
             if (month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12) {
                 if(date>31){
@@ -135,7 +136,15 @@ global.writeDataToShero = function (data) {
     }
     //emi_ic = (ic_flow_sum/ic_flow_len)*AREA*(ic_co2_sum/ic_co2_len);
     //sql_ic = 'insert into co2_emissions(date_time,emissions,location) values(' + '\'' + time_ic + '\'' + ',' + String(emi_ic) + ',\'인천\')';
-    emi_bj = String((bj_flow_sum/bj_flow_len)*AREA*(bj_co2_sum/bj_co2_len)*6/100000);
+	const mini=0.97, max=1.03;
+	emi_bj = (bj_flow_sum/bj_flow_len)*AREA*(bj_co2_sum/bj_co2_len)*6/100000;
+	limestone = emi_bj*1.15*Math.random()*(max-mini)+mini;	gypsum=emi_bj*0.03*Math.random()*(max-mini)+mini;
+	clay=emi_bj*0.22*Math.random()*(max-mini)+mini;	coal = emi_bj*0.12*Math.random()*(max-mini)+mini;
+	silica_stone=emi_bj*0.05*Math.random()*(max-mini)+mini;	iron_oxide = emi_bj*0.03*Math.random()*(max-mini)+mini;
+
+	console.log(emi_bj, ' ::: ', limestone, ' ::: ', gypsum, ' ::: ', clay);
+
+    emi_bj = String(emi_bj);
 	//Considering second rewrite the formula
     if(emi_bj== 'NaN'){
 		console.log("5. Failed to construct sql : NO FLOWRATE DATA \n");
@@ -143,7 +152,7 @@ global.writeDataToShero = function (data) {
     else{
 		sql_bj = 'insert into co2_emissions(date_time,emissions,location) values(' + '\'' + time_bj + '\'' + ',' + emi_bj + ',\'병점\')';
 		ourdb_connection.query(sql_bj, function(error, results, fields){
-			if(error)	console.log('5. ERRO DETETED when inserting info to sheroDB', sql_bj);
+			if(error)	console.log('5. ERROR DETETED when inserting info to sheroDB', sql_bj);
 			else{
 				console.log('5. Successfully inserted into sheroDB with sql : ', sql_bj);
 				console.log('');
