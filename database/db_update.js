@@ -95,7 +95,7 @@ global.writeDataToShero = function (data) {
 
         if (data[i].cr == 'Sdongwon'){
 			if(info=='flowRate'){
-				ic_flow_sum += parseInt(data[i].con);//String??
+				ic_flow_sum += parseInt(data[i].con)*0.062+0.578;//String??
 				ic_flow_len += 1;
 			}
 			else if(info=='co2'){
@@ -107,7 +107,7 @@ global.writeDataToShero = function (data) {
         else if (data[i].cr == 'ShooN'){
             loc = '병점';
 			if(info=='flowRate'){
-				bj_flow_sum = bj_flow_sum+parseInt(data[i].con);
+				bj_flow_sum = bj_flow_sum+parseInt(data[i].con)*0.062+0.578;
 				bj_flow_len = bj_flow_len + 1;
 				console.log('병점 ::: flow', bj_flow_sum, ' ::: length : ', bj_flow_len);
 				console.log('');
@@ -124,7 +124,7 @@ global.writeDataToShero = function (data) {
         else{
             loc = '수원';
 			if(info=='flowRate'){
-				sw_flow_sum += parseInt(data[i].con);
+				sw_flow_sum += parseInt(data[i].con)*0.062+0.578;
 				sw_flow_len += 1;
 			}
 			else if(info=='co2'){
@@ -138,6 +138,9 @@ global.writeDataToShero = function (data) {
     //sql_ic = 'insert into co2_emissions(date_time,emissions,location) values(' + '\'' + time_ic + '\'' + ',' + String(emi_ic) + ',\'인천\')';
 	const mini=0.97, max=1.03;
 	emi_bj = (bj_flow_sum/bj_flow_len)*AREA*(bj_co2_sum/bj_co2_len)*6/100000;
+	console.log('average flow :::::', (bj_flow_sum/bj_flow_len));
+	console.log('average co2 :::::', (bj_co2_sum/bj_co2_len));
+	console.log(' ::::: ', emi_bj);
 	limestone = String(emi_bj*1.15*(Math.random()*(max-mini)+mini));
 	gypsum = String(emi_bj*0.03*(Math.random()*(max-mini)+mini));
 	clay= String(emi_bj*0.22*(Math.random()*(max-mini)+mini));
