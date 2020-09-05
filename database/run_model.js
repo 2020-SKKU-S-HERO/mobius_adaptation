@@ -14,7 +14,7 @@ let options = {
 PythonShell.run('prediction_model_bj.py',options ,function(err, result){
 	if(err) throw err;
 	console.log("Python result : ");
-	console.log(result);
+	console.log(result[444]);
 	console.log('finsihed');
 });
 

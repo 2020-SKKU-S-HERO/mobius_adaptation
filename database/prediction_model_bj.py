@@ -73,14 +73,13 @@ def build_model():
     return model
 
 def prediction_write_DB(model, input_data):
-    predict_value = model.predict(input_data)
-	#index = input_data.index
-	#index = np.array(index)
-	#dic = {'date_time': index,'predict_value':predict_value}
-	#predict_value = pd.DataFrame(data=dic, dtype=object)
-	#predict_value.to_sql(name='predict_value', con=engine, if_exists='replace')
-    print(predict_value)
-	print("Success on database writing")
+	predict_value = model.predict(input_data)
+	input_data = pd.DataFrame(input_data)
+	index = input_data.index
+	index = np.array(index)
+	dic = {'date_time': index,'location' : '병점','predict_value' : predict_value}
+	predict_value = pd.DataFrame(data=dic, dtype=object)
+	predict_value.to_sql(name='predict_value', con=engine, if_exists='replace')
 
 prediction_model = build_model()
 prediction_write_DB(prediction_model, test_feature)
