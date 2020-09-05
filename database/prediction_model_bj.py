@@ -13,15 +13,14 @@ from sqlalchemy import create_engine
 import matplotlib.pyplot as plt
 
 engine = create_engine('mysql+pymysql://root:shero@localhost/sheroDB', echo=True)
-
 """
-test_DB = pymysql.connect(
-    host = "localhost",
-    port = 3306,
-    user = "root",
-    password = 'shero',
-    database = 'test',
-    charset = 'utf8'
+sheroDB = pymysql.connect(
+		host = "localhost",
+		port = 3306,
+		user = "root",
+		password = 'shero',
+		database = 'sheroDB',
+		charset = 'utf8'
 )
 """
 
@@ -31,7 +30,7 @@ data['date_time'] = pd.to_datetime(data['date_time'])
 data = data.set_index('date_time',inplace=False)
 data = data.resample(rule='1440T').sum()
 
-def create_dataset(data, label, look_back=5):
+def create_dataset(data, label, look_back=30):
     dataX, dataY = [], []
     for i in range(len(data)-look_back):
         dataX.append(np.array(data.iloc[i:i+look_back]))
@@ -46,8 +45,8 @@ scaled_data = scaler.fit_transform(data[scale_cols])
 scaled_data = pd.DataFrame(scaled_data)
 scaled_data.columns = scale_cols
 
-train = scaled_data[:-30]
-test = scaled_data[-30:]
+train = scaled_data[:-90]
+test = scaled_data[-90:]
 
 
 feature_cols = ['limestone', 'clay', 'silica_stone', 'iron_oxide', 'gypsum', 'coal']
@@ -57,9 +56,9 @@ train_label = train[label_cols]
 test_feature = test[feature_cols]
 test_label = test[label_cols]
 
-train_feature, train_label = create_dataset(train_feature, train_label,5)
+train_feature, train_label = create_dataset(train_feature, train_label,30)
 x_train, x_valid, y_train, y_valid = train_test_split(train_feature, train_label, test_size=0.2)
-test_feature, test_label = create_dataset(test_feature, test_label,5)
+test_feature, test_label = create_dataset(test_feature, test_label,30)
 
 
 
@@ -71,7 +70,7 @@ def build_model():
     model.compile(loss='mean_squared_error', optimizer='adam')
     hist = model.fit(x_train, y_train, epochs=200, batch_size=16, validation_data=(x_valid, y_valid))
     return model
-
+"""
 def prediction_write_DB(model, input_data):
 	predict_value = model.predict(input_data)
 	input_data = pd.DataFrame(input_data)
@@ -80,6 +79,12 @@ def prediction_write_DB(model, input_data):
 	dic = {'date_time': index,'location' : '병점','predict_value' : predict_value}
 	predict_value = pd.DataFrame(data=dic, dtype=object)
 	predict_value.to_sql(name='predict_value', con=engine, if_exists='replace')
+"""
+model = build_model()
+predict_value = model.predict(test_feature)
+print(data.iloc[-1].name)
+#df = pd.DataFrame(predict_value, [0:],["emissions"])
+#print(df)
 
-prediction_model = build_model()
-prediction_write_DB(prediction_model, test_feature)
+
+#prediction_write_DB(prediction_model, test_feature)
