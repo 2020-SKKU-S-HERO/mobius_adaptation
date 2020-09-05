@@ -2781,7 +2781,7 @@ function scheduleDB() {
 
     setTimeout(function () {    
         scheduleDB();
-    }, nextMinutes * 60 * 1000);
+    }, nextMinutes * 5 * 60 * 1000);
 }
 
 // call this in the startup script of your app (once per process)
