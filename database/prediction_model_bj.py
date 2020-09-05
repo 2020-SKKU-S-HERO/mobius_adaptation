@@ -11,6 +11,7 @@ from tensorflow.keras.layers import LSTM, Dense, Dropout, Activation
 from tensorflow.keras.models import Sequential
 from sqlalchemy import create_engine
 import matplotlib.pyplot as plt
+from datetime import datetime, timedelta
 
 engine = create_engine('mysql+pymysql://root:shero@localhost/sheroDB', echo=True)
 """
@@ -82,9 +83,13 @@ def prediction_write_DB(model, input_data):
 """
 model = build_model()
 predict_value = model.predict(test_feature)
-print(data.iloc[-1].name)
-#df = pd.DataFrame(predict_value, [0:],["emissions"])
+#print(data.iloc[-1].name)
+pred_date = data.iloc[-60:]
+pred_date = np.array(pred_date.index)
+pred_date = pd.DatetimeIndex(pred_date) + timedelta(days=60)
+print(pred_date)
+df = pd.DataFrame(predict_value,pred_date,["emissions"])
 #print(df)
-
-
+df.to_sql(name='predict_value', con=engine, if_exists='replace')
+ 
 #prediction_write_DB(prediction_model, test_feature)
