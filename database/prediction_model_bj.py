@@ -31,7 +31,7 @@ data['Date Time'] = pd.to_datetime(data['Date Time'])
 data = data.set_index('Date Time',inplace=False)
 data = data.resample(rule='1440T').sum()
 
- def create_dataset(data, label, look_back=5):
+def create_dataset(data, label, look_back=5):
     dataX, dataY = [], []
     for i in range(len(data)-look_back):
         dataX.append(np.array(data.iloc[i:i+look_back]))
