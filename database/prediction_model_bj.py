@@ -27,8 +27,8 @@ test_DB = pymysql.connect(
 
 sql = 'select * from co2_emissions where location="병점"'
 data = pd.read_sql(sql, engine)
-data['Date Time'] = pd.to_datetime(data['Date Time'])
-data = data.set_index('Date Time',inplace=False)
+data['date_time'] = pd.to_datetime(data['date_time'])
+data = data.set_index('date_time',inplace=False)
 data = data.resample(rule='1440T').sum()
 
 def create_dataset(data, label, look_back=5):
@@ -41,7 +41,7 @@ def create_dataset(data, label, look_back=5):
 
 #데이터 전처리
 scaler = MinMaxScaler(feature_range=(0, 1))
-scale_cols = ['Limestone','Clay','Silica Stone','Iron Oxide','Gypsum','Coal','Carbon Dioxide']
+scale_cols = ['limestone', 'clay', 'silica_stone', 'iron_oxide', 'gypsum', 'coal', 'carbon_dioxide']
 scaled_data = scaler.fit_transform(data[scale_cols])
 scaled_data = pd.DataFrame(scaled_data)
 scaled_data.columns = scale_cols
@@ -50,8 +50,8 @@ train = scaled_data[:-30]
 test = scaled_data[-30:]
 
 
-feature_cols = ['Limestone','Clay','Silica Stone','Iron Oxide','Gypsum','Coal']
-label_cols = ['Carbon Dioxide']
+feature_cols = ['limestone', 'clay', 'silica_stone', 'iron_oxide', 'gypsum', 'coal']
+label_cols = ['carbon_dioxide']
 train_feature = train[feature_cols]
 train_label = train[label_cols]
 test_feature = test[feature_cols]
@@ -76,7 +76,7 @@ def prediction_write_DB(model, input_data):
     predict_value = model.predict(input_data)
     index = input_data.index
     index = np.array(index)
-    dic = {'Date Time': index,'predict_value':predict_value}
+    dic = {'date_time': index,'predict_value':predict_value}
     predict_value = pd.DataFrame(data=dic, dtype=object)
     predict_value.to_sql(name='predict_value', con=engine, if_exists='replace')
     print("Success on database writing")
