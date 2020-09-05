@@ -41,7 +41,7 @@ def create_dataset(data, label, look_back=5):
 
 #데이터 전처리
 scaler = MinMaxScaler(feature_range=(0, 1))
-scale_cols = ['limestone', 'clay', 'silica_stone', 'iron_oxide', 'gypsum', 'coal', 'carbon_dioxide']
+scale_cols = ['limestone', 'clay', 'silica_stone', 'iron_oxide', 'gypsum', 'coal', 'emissions']
 scaled_data = scaler.fit_transform(data[scale_cols])
 scaled_data = pd.DataFrame(scaled_data)
 scaled_data.columns = scale_cols
@@ -51,7 +51,7 @@ test = scaled_data[-30:]
 
 
 feature_cols = ['limestone', 'clay', 'silica_stone', 'iron_oxide', 'gypsum', 'coal']
-label_cols = ['carbon_dioxide']
+label_cols = ['emissions']
 train_feature = train[feature_cols]
 train_label = train[label_cols]
 test_feature = test[feature_cols]
@@ -74,13 +74,13 @@ def build_model():
 
 def prediction_write_DB(model, input_data):
     predict_value = model.predict(input_data)
-    index = input_data.index
-    index = np.array(index)
-    dic = {'date_time': index,'predict_value':predict_value}
-    predict_value = pd.DataFrame(data=dic, dtype=object)
-    predict_value.to_sql(name='predict_value', con=engine, if_exists='replace')
-    print("Success on database writing")
-
+	#index = input_data.index
+	#index = np.array(index)
+	#dic = {'date_time': index,'predict_value':predict_value}
+	#predict_value = pd.DataFrame(data=dic, dtype=object)
+	#predict_value.to_sql(name='predict_value', con=engine, if_exists='replace')
+    print(predict_value)
+	print("Success on database writing")
 
 prediction_model = build_model()
 prediction_write_DB(prediction_model, test_feature)
