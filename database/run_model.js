@@ -11,7 +11,7 @@ let options = {
 	args : []
 };
 
-PythonShell.run('prediction_model_bj.py',options ,function(err, result){
+PythonShell.run('data_import.py',options ,function(err, result){
 	if(err) throw err;
 	console.log("Python result : ");
 	console.log(result);
