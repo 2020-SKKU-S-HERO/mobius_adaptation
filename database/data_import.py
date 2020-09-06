@@ -16,9 +16,9 @@ sheroDB = pymysql.connect(
 try:
     cursor = sheroDB.cursor()
     #for loc in sheet:
-    data = pd.read_csv('dataset_sw_5m.csv', header=0,names=['date_time', 'limestone', 'clay', 'silica_stone', 'iron_oxide', 'gypsum', 'coal', 'carbon_dioxide'])
+    data = pd.read_csv('dataset_bj_5m.csv', header=0,names=['date_time', 'limestone', 'clay', 'silica_stone', 'iron_oxide', 'gypsum', 'coal', 'carbon_dioxide'])
     for index, row in data.iterrows():
-        sql = "INSERT IGNORE INTO co2_emissions(date_time, location, emissions, limestone, clay, silica_stone, iron_oxide, gypsum, coal) VALUES (\'"+str(row['date_time'])+"\',\'수원\',"+ str(row['carbon_dioxide'])+','+ str(row['limestone']) + ","+str(row['clay'])+","+str(row['silica_stone'])+ "," + str(row['iron_oxide']) + "," + str(row['gypsum']) + "," + str(row['coal']) + ");"
+        sql = "INSERT IGNORE INTO co2_emissions(date_time, location, emissions, limestone, clay, silica_stone, iron_oxide, gypsum, coal) VALUES (\'"+str(row['date_time'])+"\',\'병점\',"+ str(row['carbon_dioxide'])+','+ str(row['limestone']) + ","+str(row['clay'])+","+str(row['silica_stone'])+ "," + str(row['iron_oxide']) + "," + str(row['gypsum']) + "," + str(row['coal']) + ");"
 #+"ON DUPLICATE KEY UPDATE(emissions="+str(row['carbon_dioxide'])+", limestone="+str(row['limestone'])+", clay="+str(row['clay'])+", silica_stone="+str(row['silica_stone'])+", iron_oxide="+ str(row['iron_oxide'])+", gypsum="+str(row['gypsum'])+", coal="+str(row['coal'])+");"
 #print(sql)
         cursor.execute(sql)

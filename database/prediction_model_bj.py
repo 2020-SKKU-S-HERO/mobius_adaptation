@@ -12,6 +12,7 @@ from tensorflow.keras.models import Sequential
 from sqlalchemy import create_engine
 import matplotlib.pyplot as plt
 from datetime import datetime, timedelta
+from dateutil.relativedelta import relativedelta
 
 engine = create_engine('mysql+pymysql://root:shero@localhost/sheroDB', echo=True)
 
@@ -24,17 +25,18 @@ def create_dataset(data, label, look_back=30):
 
 def create_input(data, last_data, look_back=30):
     dataX = []
-	tempD, tempL = [], []
+    tempD, tempL = [], []
     for i in range(look_back):
-		tempD = data.iloc[len(data)-look_back+i : len(data)]
-		tempL = last_data[0: i]
-		dataX.append(np.concatenate(np.array(tempD),np.array(tempL), axis=None))
+        tempD = data.iloc[len(data)-look_back+i : len(data)]
+        tempL = last_data.iloc[0: i]
+        dataX.append(np.concatenate((np.array(tempD),np.array(tempL)), axis=0))
+#print(dataX.shape)
     return np.array(dataX)
 
 sql = 'select * from co2_emissions where location="병점"'
 data = pd.read_sql(sql, engine)
 data['date_time'] = pd.to_datetime(data['date_time'])
-#data = data.set_index('date_time',inplace=False)
+data = data.set_index('date_time',inplace=False)
 data = data.resample(rule='1440T').sum()
 
 #데이터 전처리
@@ -57,12 +59,28 @@ def build_model():
     model.add(Dropout(0.3))
     model.add(Dense(1))
     model.compile(loss='mean_squared_error', optimizer='adam')
-    hist = model.fit(train_feature, train_label, epochs=200, batch_size=16)
+    hist = model.fit(train_feature, train_label, epochs=1, batch_size=16)
     return model
 
 model = build_model()
 input_data = data[feature_cols]
-input_data = create_input(input_data[-60:], 60)
+#print(input_data.head())
+#print(input_data.info())
+#print(input_data.tail())
+
+today = datetime.today()
+#print(today)
+last_year = today - relativedelta(years=1)
+last_year_end = last_year + timedelta(days=70)
+last_year_end = str(last_year_end)[0:10]
+last_year = str(last_year)[0:10]
+
+#print(datetime.strptime(last_year, "%Y-%m-%d").date())
+last_data = data[:][datetime.strptime(last_year, "%Y-%m-%d").date():datetime.strptime(last_year_end, "%Y-%m-%d").date()]
+#print(last_data.head())
+#print(last_year)
+input_data = create_input(input_data[-60:], last_data, 60)
+print(input_data.shape)
 predict_value = model.predict(input_data)
 print(predict_value)
 print(predict_value.shape)
@@ -70,11 +88,11 @@ print(predict_value.shape)
 """
 def prediction_write_DB(model, input_data):
 	predict_value = model.predict(input_data)
-#	predict = []
+	predict = []
 	loc = ['병점']
-#	for i in range(60):
-#		predict.append(predict_value[i][0])
-#		loc.append('병점');
+	for i in range(60):
+		predict.append(predict_value[i][0])
+		loc.append('병점');
 	#print(data.iloc[-1].name)
 	pred_date = data.iloc[-60:]
 	pred_date = np.array(pred_date.index)

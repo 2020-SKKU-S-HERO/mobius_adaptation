@@ -11,16 +11,11 @@ let options = {
 	args : []
 };
 
-PythonShell.run('prediction_model_bj.py',options ,function(err, result){
+PythonShell.run('data_import.py',options ,function(err, result){
 	if(err) throw err;
 	console.log("Python result : ");
 	
-	console.log(result.length);
-	console.log(result[446]);
-console.log(result[447]);
-console.log(result[448]);
-	
-	console.log(result[449]);
+	//console.log(result);
 	console.log('finsihed');
 });
 
