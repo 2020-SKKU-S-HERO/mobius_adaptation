@@ -83,12 +83,18 @@ def prediction_write_DB(model, input_data):
 """
 model = build_model()
 predict_value = model.predict(test_feature)
+predict = []
+loc = []
+for i in range(60):
+	predict.append(predict_value[i][0])
+	loc.append('병점');
 #print(data.iloc[-1].name)
 pred_date = data.iloc[-60:]
 pred_date = np.array(pred_date.index)
 pred_date = pd.DatetimeIndex(pred_date) + timedelta(days=60)
-print(pred_date)
-df = pd.DataFrame(predict_value,pred_date,["emissions"])
+dictionary = {'date_time' : pred_date, 'predict_value' : predict , 'location' : loc}
+df = pd.DataFrame(dictionary)
+print(df.head())
 #print(df)
 df.to_sql(name='predict_value', con=engine, if_exists='replace')
  
