@@ -30,7 +30,6 @@ def create_input(data, last_data, look_back=30):
         tempD = data.iloc[len(data)-look_back+i : len(data)]
         tempL = last_data.iloc[0: i]
         dataX.append(np.concatenate((np.array(tempD),np.array(tempL)), axis=0))
-#print(dataX.shape)
     return np.array(dataX)
 
 sql = 'select * from co2_emissions where location="병점"'
@@ -59,7 +58,7 @@ def build_model():
     model.add(Dropout(0.3))
     model.add(Dense(1))
     model.compile(loss='mean_squared_error', optimizer='adam')
-    hist = model.fit(train_feature, train_label, epochs=1, batch_size=16)
+    hist = model.fit(train_feature, train_label, epochs=200, batch_size=16)
     return model
 
 model = build_model()
@@ -77,24 +76,29 @@ last_year = str(last_year)[0:10]
 
 #print(datetime.strptime(last_year, "%Y-%m-%d").date())
 last_data = data[:][datetime.strptime(last_year, "%Y-%m-%d").date():datetime.strptime(last_year_end, "%Y-%m-%d").date()]
-#print(last_data.head())
-#print(last_year)
-input_data = create_input(input_data[-60:], last_data, 60)
-print(input_data.shape)
+last_data = last_data.drop(['emissions'],axis=1)
+input_data = create_input(input_data[-120:], last_data, 60)
 predict_value = model.predict(input_data)
-print(predict_value)
+predict_value = predict_value.flatten()
+loc=[]
+for i in range(60):
+	loc.append(['병점'])
+loc = np.array(loc).flatten()
+pred_date = data.iloc[-60:]
+pred_date = np.array(pred_date.index)
+pred_date = pd.DatetimeIndex(pred_date) + timedelta(days=60)
+pred_date = np.array(pred_date)
 print(predict_value.shape)
+print(pred_date.shape)
+print(loc.shape)
+dic = {'date_time' : pred_date, 'predict_value' : predict_value , 'location' : loc}
+df = pd.DataFrame(dic)
+df.to_sql(name='predict_value',con=engine, if_exists='replace')
 
 """
-def prediction_write_DB(model, input_data):
-	predict_value = model.predict(input_data)
-	predict = []
+def prediction_write_DB(predict):
 	loc = ['병점']
-	for i in range(60):
-		predict.append(predict_value[i][0])
-		loc.append('병점');
-	#print(data.iloc[-1].name)
-	pred_date = data.iloc[-60:]
+	pred_date = data.iloc[i-60:]
 	pred_date = np.array(pred_date.index)
 	pred_date = pd.DatetimeIndex(pred_date) + timedelta(days=60)
 	dictionary = {'date_time' : pred_date, 'predict_value' : predict_value , 'location' : loc}
