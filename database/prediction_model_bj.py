@@ -14,22 +14,6 @@ import matplotlib.pyplot as plt
 from datetime import datetime, timedelta
 
 engine = create_engine('mysql+pymysql://root:shero@localhost/sheroDB', echo=True)
-"""
-sheroDB = pymysql.connect(
-		host = "localhost",
-		port = 3306,
-		user = "root",
-		password = 'shero',
-		database = 'sheroDB',
-		charset = 'utf8'
-)
-"""
-
-sql = 'select * from co2_emissions where location="병점"'
-data = pd.read_sql(sql, engine)
-data['date_time'] = pd.to_datetime(data['date_time'])
-data = data.set_index('date_time',inplace=False)
-data = data.resample(rule='1440T').sum()
 
 def create_dataset(data, label, look_back=30):
     dataX, dataY = [], []
@@ -38,13 +22,20 @@ def create_dataset(data, label, look_back=30):
         dataY.append(np.array(label.iloc[i+look_back]))
     return np.array(dataX), np.array(dataY)
 
-def create_input(data, look_back=30):
+def create_input(data, last_data, look_back=30):
     dataX = []
-    for i in range(len(data)-look_back):
-        dataX.append(np.array(data.iloc[i:i+look_back]))
+	tempD, tempL = [], []
+    for i in range(look_back):
+		tempD = data.iloc[len(data)-look_back+i : len(data)]
+		tempL = last_data[0: i]
+		dataX.append(np.concatenate(np.array(tempD),np.array(tempL), axis=None))
     return np.array(dataX)
 
-
+sql = 'select * from co2_emissions where location="병점"'
+data = pd.read_sql(sql, engine)
+data['date_time'] = pd.to_datetime(data['date_time'])
+#data = data.set_index('date_time',inplace=False)
+data = data.resample(rule='1440T').sum()
 
 #데이터 전처리
 scaler = MinMaxScaler(feature_range=(0, 1))
@@ -52,18 +43,13 @@ scale_cols = ['limestone', 'clay', 'silica_stone', 'iron_oxide', 'gypsum', 'coal
 scaled_data = scaler.fit_transform(data[scale_cols])
 scaled_data = pd.DataFrame(scaled_data)
 scaled_data.columns = scale_cols
-
 train = scaled_data
-
 
 feature_cols = ['limestone', 'clay', 'silica_stone', 'iron_oxide', 'gypsum', 'coal']
 label_cols = ['emissions']
 train_feature = train[feature_cols]
 train_label = train[label_cols]
-
-train_feature, train_label = create_dataset(train_feature, train_label,30)
-
-
+train_feature, train_label = create_dataset(train_feature, train_label, 60)
 
 def build_model():
     model = Sequential()
@@ -73,6 +59,14 @@ def build_model():
     model.compile(loss='mean_squared_error', optimizer='adam')
     hist = model.fit(train_feature, train_label, epochs=200, batch_size=16)
     return model
+
+model = build_model()
+input_data = data[feature_cols]
+input_data = create_input(input_data[-60:], 60)
+predict_value = model.predict(input_data)
+print(predict_value)
+print(predict_value.shape)
+
 """
 def prediction_write_DB(model, input_data):
 	predict_value = model.predict(input_data)
@@ -88,12 +82,7 @@ def prediction_write_DB(model, input_data):
 	dictionary = {'date_time' : pred_date, 'predict_value' : predict_value , 'location' : loc}
 	return dictionary
 """
-model = build_model()
-input_data = data[feature_cols]
-input_data = create_input(input_data[-60:],30)
-predict_value = model.predict(input_data)
-print(predict_value)
-print(predict_value.shape)
+
 
 """
 dic ={}
@@ -103,4 +92,3 @@ df = pd.DataFrame(dic)
 df.to_sql(name='predict_value', con=engine, if_exists='replace')
 
 """
-
