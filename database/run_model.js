@@ -16,7 +16,11 @@ PythonShell.run('prediction_model_bj.py',options ,function(err, result){
 	console.log("Python result : ");
 	
 	console.log(result.length);
-	console.log(result[495]);
+	console.log(result[446]);
+console.log(result[447]);
+console.log(result[448]);
+	
+	console.log(result[449]);
 	console.log('finsihed');
 });
 
