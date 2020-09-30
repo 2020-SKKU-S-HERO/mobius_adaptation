@@ -94,7 +94,7 @@ exports.mqtt_watchdog = function() {
         http_retrieve_CSEBase(function(rsc, res_body) {
             if (rsc == '2000') {
                 var jsonObj = JSON.parse(res_body);
-                if(jsonObj.hasOwnProperty('m2m:cb')) {
+				if(jsonObj.hasOwnProperty('m2m:cb')) {
                     usecseid = jsonObj['m2m:cb'].csi;
 
                     mqtt_state = 'connecting';

@@ -1,4 +1,5 @@
-exports.send_to_toolkit = function(data){
+//exports
+global.send_to_toolkit = function(data){
     const options = {
         url : 'http://129.254.221.107:8895',
         headers : 'Content=Type:application/json',
@@ -8,11 +9,11 @@ exports.send_to_toolkit = function(data){
 
     request = require('request');
 
-    request.post({options}, function(error, res, body){
+    request.post(options, function(error, res, body){
         if(error)
             console.log(error);
         else{
-            res.json(body);
+            console.log(body);
         }
     });
 }
