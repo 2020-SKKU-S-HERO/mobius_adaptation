@@ -134,8 +134,7 @@ global.writeDataToShero = function (data) {
             time_sw = time;
 		}
     }
-    //emi_ic = (ic_flow_sum/ic_flow_len)*AREA*(ic_co2_sum/ic_co2_len);
-    //sql_ic = 'insert into co2_emissions(date_time,emissions,location) values(' + '\'' + time_ic + '\'' + ',' + String(emi_ic) + ',\'인천\')';
+    
 	const mini=0.97, max=1.03;
 	emi_bj = (bj_flow_sum/bj_flow_len)*AREA*(bj_co2_sum/bj_co2_len)*6/100000;
 	console.log('average flow :::::', (bj_flow_sum/bj_flow_len));
@@ -166,26 +165,6 @@ global.writeDataToShero = function (data) {
 		});
     }
 
-    //emi_sw = (sw_flow_sum/sw_flow_len)*AREA*(sw_co2_sum/sw_co2_len);
-    //sql_sw = 'insert into co2_emissions(date_time,emissions,location) values(' + '\'' + time_sw + '\'' + ',' + String(emi_sw) + ',\'수원\')';
-  /*  ourdb_connection.query(sql_ic, function (error, results, fields) {
-        if (error) {
-            //console.log('5. ERROR DETECTED when inserting info to sherdoDB', sql);
-        }
-        else {
-            console.log('5. Successfully inserted into sheroDB with sql :', sql_ic);
-            console.log('');
-        }
-    });*/
-/*    ourdb_connection.query(sql_sw, function (error, results, fields) {
-        if (error) {
-            //console.log('5. ERROR DETECTED when inserting info to sherdoDB', sql);
-        }
-        else {
-            console.log('5. Successfully inserted into sheroDB with sql :', sql_sw);
-            console.log('');
-        }
-    });*/
     ourdb_connection.end();
 }
 
@@ -273,4 +252,6 @@ exports.mobius_to_shero = function () {
         }
     });
     ourdb_connection.end();
+    const forward_to_toolkit = require('./send_data_toolkit.js');
+    
 };
