@@ -156,6 +156,13 @@ global.writeDataToShero = function (data) {
 	}
     else{
 		sql_bj = 'insert into co2_emissions(date_time,emissions,location, limestone, clay, silica_stone, iron_oxide, gypsum, coal) values(' + '\'' + time_bj + '\'' + ',' + emi_bj + ',\'병점\','+limestone+','+clay+','+silica_stone+','+iron_oxide+','+gypsum+','+coal+')';
+		json_obj = {
+			'date_time' : time_bj,	'emissions' : emi_bj,	'location' : '병점',
+			'limestone' : linestone,	'gypsum' : gypsum,	'clay' : clay,
+			'coal' : coal, 'silica_stone' : silica_stone, 'iron_oxide' : iron_oxide};
+		const send_data = require('./send_data_toolkit.js');
+		send_data.send_to_toolkit(json_obj);
+
 		ourdb_connection.query(sql_bj, function(error, results, fields){
 			if(error)	console.log('5. ERROR DETETED when inserting info to sheroDB', sql_bj);
 			else{
@@ -233,7 +240,6 @@ global.getDataFromMobius = function (result) {
             console.log('');
             if (results.length > 0){
                 writeDataToShero(results);
-                
             }
         }
     });
