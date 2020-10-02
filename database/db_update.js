@@ -231,8 +231,10 @@ global.getDataFromMobius = function (result) {
         else {
             console.log('3. Date string matched result : ', sql, 'and length : ', results.length);
             console.log('');
-            if (results.length > 0)
+            if (results.length > 0){
                 writeDataToShero(results);
+                
+            }
         }
     });
     mobius_connection.end();
