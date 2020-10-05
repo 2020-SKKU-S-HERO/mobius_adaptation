@@ -158,7 +158,7 @@ global.writeDataToShero = function (data) {
 		sql_bj = 'insert into co2_emissions(date_time,emissions,location, limestone, clay, silica_stone, iron_oxide, gypsum, coal) values(' + '\'' + time_bj + '\'' + ',' + emi_bj + ',\'병점\','+limestone+','+clay+','+silica_stone+','+iron_oxide+','+gypsum+','+coal+')';
 		json_obj = {
 			'date_time' : time_bj,	'emissions' : emi_bj,	'location' : '병점',
-			'limestone' : linestone,	'gypsum' : gypsum,	'clay' : clay,
+			'limestone' : limestone,	'gypsum' : gypsum,	'clay' : clay,
 			'coal' : coal, 'silica_stone' : silica_stone, 'iron_oxide' : iron_oxide};
 		const send_data = require('./send_data_toolkit.js');
 		send_data.send_to_toolkit(json_obj);
