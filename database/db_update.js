@@ -30,12 +30,13 @@ global.writeDataToShero = function (data) {
 	let sw_co2_sum=0, sw_co2_len=0, sw_flow_sum=0, sw_flow_len=0;
     let emi_bj = 0;
 	const AREA = 38.48;
-	let limestone=0, gypsum=0, clay=0, coal=0, silica_stone=0, iron_oxide=0;
+    let limestone=0, gypsum=0, clay=0, coal=0, silica_stone=0, iron_oxide=0;
+    let flow=0, emi=0;
 
     let time, year, month, date, hou, min, sec, milsec, loc;
 
     for (var i = 0; i < data.length; i++) {
-		
+		emi = 0; flow=0;
 		//if(i<20)
 		//	console.log(data[i]);
 		time = data[i].ri.split('-');
@@ -107,17 +108,16 @@ global.writeDataToShero = function (data) {
         else if (data[i].cr == 'ShooN'){
             loc = '병점';
 			if(info=='flowRate'){
-				bj_flow_sum = bj_flow_sum+parseInt(data[i].con)*0.062+0.578;
+                flow = parseInt(data[i].con)*0.062+0.578;
+				bj_flow_sum = bj_flow_sum+flow;
 				bj_flow_len = bj_flow_len + 1;
 				console.log('병점 ::: flow', bj_flow_sum, ' ::: length : ', bj_flow_len);
-				console.log('');
 			}
 			else if(info=='co2'){
-				bj_co2_sum = bj_co2_sum + parseInt(data[i].con);
-				console.log(parseInt(data[i].con));
+                emi = data[i].con;
+				bj_co2_sum = bj_co2_sum + emi;
 				bj_co2_len += 1;
 				console.log('병점 ::: co2   ', bj_co2_sum, '::: length : ', bj_co2_len);
-				console.log('');
             }
             time_bj = time;
 		}
@@ -132,14 +132,26 @@ global.writeDataToShero = function (data) {
 				sw_co2_len += 1;
             }
             time_sw = time;
-		}
+        }
+        
+        emi = emi*AREA*flow*6/100000
+        json_obj = 0;
+        if(flow>0)
+            json_obj = {
+            'date_time' : time_bj,	'flowrate' : flow};
+        if(emi>0)
+            json_obj = {
+            'date_time' : time_bj,	'emissions' : emi,
+            'limestone' : emi*1.15*(Math.random()*(max-mini)+mini),	'gypsum' : emi*0.03*(Math.random()*(max-mini)+mini),	'clay' : emi*0.22*(Math.random()*(max-mini)+mini),
+            'coal' : emi*0.12*(Math.random()*(max-mini)+mini), 'silica_stone' : emi*0.05*(Math.random()*(max-mini)+mini), 'iron_oxide' : emi*0.03*(Math.random()*(max-mini)+mini)};
+        const send_data = require('./send_data_toolkit.js');
+        send_data.send_to_toolkit(json_obj);
     }
-    
+
 	const mini=0.97, max=1.03;
 	emi_bj = (bj_flow_sum/bj_flow_len)*AREA*(bj_co2_sum/bj_co2_len)*6/100000;
-	console.log('average flow :::::', (bj_flow_sum/bj_flow_len));
-	console.log('average co2 :::::', (bj_co2_sum/bj_co2_len));
-	console.log(' ::::: ', emi_bj);
+	//console.log('average flow :::::', (bj_flow_sum/bj_flow_len));
+	//console.log('average co2 :::::', (bj_co2_sum/bj_co2_len));
 	limestone = String(emi_bj*1.15*(Math.random()*(max-mini)+mini));
 	gypsum = String(emi_bj*0.03*(Math.random()*(max-mini)+mini));
 	clay= String(emi_bj*0.22*(Math.random()*(max-mini)+mini));
@@ -147,7 +159,7 @@ global.writeDataToShero = function (data) {
 	silica_stone= String(emi_bj*0.05*(Math.random()*(max-mini)+mini));
 	iron_oxide = String(emi_bj*0.03*(Math.random()*(max-mini)+mini));
 
-	console.log(emi_bj, ' ::: ', limestone, ' ::: ', gypsum, ' ::: ', clay);
+	console.log('EMISSION : ', emi_bj, ' ::: LIMESTONE : ', limestone, ' ::: GYPSUM : ', gypsum, ' ::: CLAY : ', clay);
 
     emi_bj = String(emi_bj);
 	//Considering second rewrite the formula
@@ -156,12 +168,6 @@ global.writeDataToShero = function (data) {
 	}
     else{
 		sql_bj = 'insert into co2_emissions(date_time,emissions,location, limestone, clay, silica_stone, iron_oxide, gypsum, coal) values(' + '\'' + time_bj + '\'' + ',' + emi_bj + ',\'병점\','+limestone+','+clay+','+silica_stone+','+iron_oxide+','+gypsum+','+coal+')';
-		json_obj = {
-			'date_time' : time_bj,	'emissions' : emi_bj,	'location' : '병점',
-			'limestone' : limestone,	'gypsum' : gypsum,	'clay' : clay,
-			'coal' : coal, 'silica_stone' : silica_stone, 'iron_oxide' : iron_oxide};
-		const send_data = require('./send_data_toolkit.js');
-		send_data.send_to_toolkit(json_obj);
 
 		ourdb_connection.query(sql_bj, function(error, results, fields){
 			if(error)	console.log('5. ERROR DETETED when inserting info to sheroDB', sql_bj);
@@ -259,7 +265,5 @@ exports.mobius_to_shero = function () {
             getDataFromMobius(results);
         }
     });
-    ourdb_connection.end();
-    const forward_to_toolkit = require('./send_data_toolkit.js');
-    
+    ourdb_connection.end();    
 };
