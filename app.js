@@ -2775,7 +2775,7 @@ function scheduleGc() {
 function scheduleDB() {
     // schedule next gc within a random interval (e.g. 15-45 minutes)
     // tweak this based on your app's memory usage
-    var nextMinutes = 5;
+    var nextMinutes = 0.5;
     const db_update = require('./database/db_update.js');
     db_update.mobius_to_shero();
 

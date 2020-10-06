@@ -34,9 +34,9 @@ global.writeDataToShero = function (data) {
     let flow=0, emi=0;
 
     let time, year, month, date, hou, min, sec, milsec, loc;
-
+	const mini=0.97, max=1.03;
     for (var i = 0; i < data.length; i++) {
-		emi = 0; flow=0;
+		//emi = 0; flow=0;
 		//if(i<20)
 		//	console.log(data[i]);
 		time = data[i].ri.split('-');
@@ -51,7 +51,7 @@ global.writeDataToShero = function (data) {
         year = parseInt(year);   month = parseInt(month);
         hou = parseInt(hou);    date = parseInt(date);
         month = parseInt(month);
-		
+			
 		//TIME SHIFT
         if (hou >= 15) {
             hou = hou + 9 - 24; //-9
@@ -96,10 +96,12 @@ global.writeDataToShero = function (data) {
 
         if (data[i].cr == 'Sdongwon'){
 			if(info=='flowRate'){
+				flow = parseInt(data[i].con);
 				ic_flow_sum += parseInt(data[i].con)*0.062+0.578;//String??
 				ic_flow_len += 1;
 			}
 			else if(info=='co2'){
+				emi=data[i].con;
 				ic_co2_sum += parseInt(data[i].con);
 				ic_flow_len += 1;
             }
@@ -108,13 +110,13 @@ global.writeDataToShero = function (data) {
         else if (data[i].cr == 'ShooN'){
             loc = '병점';
 			if(info=='flowRate'){
-                flow = parseInt(data[i].con)*0.062+0.578;
+                flow = parseInt(data[i].con);
 				bj_flow_sum = bj_flow_sum+flow;
 				bj_flow_len = bj_flow_len + 1;
 				console.log('병점 ::: flow', bj_flow_sum, ' ::: length : ', bj_flow_len);
 			}
 			else if(info=='co2'){
-                emi = data[i].con;
+                emi = parseInt(data[i].con);
 				bj_co2_sum = bj_co2_sum + emi;
 				bj_co2_len += 1;
 				console.log('병점 ::: co2   ', bj_co2_sum, '::: length : ', bj_co2_len);
@@ -134,23 +136,23 @@ global.writeDataToShero = function (data) {
             time_sw = time;
         }
         
-        emi = emi*AREA*flow*6/100000
+        //emi = emi*AREA*flow*6/100000
         json_obj = 0;
         const send_data = require('./send_data_toolkit.js');
-        if(flow>0)
+        if(flow>0 && emi>0){
             json_obj = {
-            'date_time' : time_bj,	'flow_rate' : flow};
+            'adate_time' : time_bj,	'emissions' : emi, 'flow_rate':flow,
+			'limestone' : emi*1.15/100*(Math.random()*(max-mini)+mini),
+			'gypsum' : emi*0.03/100*(Math.random()*(max-mini)+mini),
+			'clay' : emi/100*0.22*(Math.random()*(max-mini)+mini),
+			'coal' : emi/100*0.12*(Math.random()*(max-mini)+mini),
+			'silica_stone' : emi/100*0.05*(Math.random()*(max-mini)+mini),
+			'iron_oxide' : emi*0.03/100*(Math.random()*(max-mini)+mini)};
             send_data.send_to_toolkit(json_obj);
-        if(emi>0){
-            json_obj = {
-            'date_time' : time_bj,	'emissions' : emi,
-            'limestone' : emi*1.15*(Math.random()*(max-mini)+mini),	'gypsum' : emi*0.03*(Math.random()*(max-mini)+mini),	'clay' : emi*0.22*(Math.random()*(max-mini)+mini),
-            'coal' : emi*0.12*(Math.random()*(max-mini)+mini), 'silica_stone' : emi*0.05*(Math.random()*(max-mini)+mini), 'iron_oxide' : emi*0.03*(Math.random()*(max-mini)+mini)};
-            send_data.send_to_toolkit(json_obj);
+			flow=0; emi=0;
         }
     }
 
-	const mini=0.97, max=1.03;
 	emi_bj = (bj_flow_sum/bj_flow_len)*AREA*(bj_co2_sum/bj_co2_len)*6/100000;
 	//console.log('average flow :::::', (bj_flow_sum/bj_flow_len));
 	//console.log('average co2 :::::', (bj_co2_sum/bj_co2_len));
