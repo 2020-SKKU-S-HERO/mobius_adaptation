@@ -140,8 +140,10 @@ global.writeDataToShero = function (data) {
         json_obj = 0;
         const send_data = require('./send_data_toolkit.js');
         if(flow>0 && emi>0){
+            flow = flow*0.062+0.578;
+            emi = flow*AREA*emi*6/100000;
             json_obj = {
-            'adate_time' : time_bj,	'emissions' : emi, 'flow_rate':flow,
+            'adate_time' : time_bj,	'emissions' : emi,
 			'limestone' : emi*1.15/100*(Math.random()*(max-mini)+mini),
 			'gypsum' : emi*0.03/100*(Math.random()*(max-mini)+mini),
 			'clay' : emi/100*0.22*(Math.random()*(max-mini)+mini),
