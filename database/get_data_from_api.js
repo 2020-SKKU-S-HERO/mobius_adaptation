@@ -6,10 +6,12 @@ const dollar = '0000001';
 const token = 'TV0P8YV3A6NS778F0JIZ';
 
 let url = host+'/'+token+'/json/kr/'+'1/'+'1/'+CODE_exchange_rate+'/DD/'+'20200901/'+'20200901/'+dollar;
-
-console.log(url);
+let par;
 
 request(url, function(err, res, body){
     //console.log(res);
-	console.log(body);
+    console.log(body);
+    par = JSON.parse(body);
+    console.log(par.row);
 })
+
