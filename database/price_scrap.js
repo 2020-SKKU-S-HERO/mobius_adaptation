@@ -5,7 +5,7 @@ var request = require('request');
 
 var chromeCapabilities = webdriver.Capabilities.chrome()
 var chromeOptions = {
-	'args': ["--headless","--no-sandbox"]
+	'args': ["--headless","--no-sandbox","--disable-dev-shm-usage"]
 };
 chromeCapabilities.set('chromeOptions', chromeOptions);
 var url = "ets.krx.co.kr/contents/ETS/03/03010000/ETS03010000.jsp";
