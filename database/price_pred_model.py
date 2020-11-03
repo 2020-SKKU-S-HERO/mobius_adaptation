@@ -41,17 +41,38 @@ def scale(df):
     print('')
 
 def struct_data(wti, elec, kau):
+    #유가는 금융시장에서 매겨지기 때문에 시장이 쉬는 날에는 데이터가 없다.
+    #전력은 매일 있다.
+    #그래서 유가 데이터가 없는 날의 전력 데이터는 없애야 한다.
+    df = pd.DataFrame()
+
+    for index, row in wti.iterrows():
+        print(row['date'], row['WTI($/bbl)'])
+        print("=======")
+        print(elec[elec['date']==row['date']].iloc[0, 1])
+        print("*******")
+        print(kau[kau['date']==row['date']].iloc[0, 1])
+        print('')
+        new_row = {'date' : row['date'], 'WTI($/bbl)' : row['WTI($/bbl)'],
+                   'elec': elec[elec['date']==row['date']].iloc[0, 1],
+                   'price' : kau[kau['date']==row['date']].iloc[0, 1]}
+        print(new_row)
+        df.append(new_row, ignore_index=True)
+
     print("WTI")
-    print(wti.describe())
+    #print(wti.describe())
     print(wti.head())
 
     print("ELEC")
-    print(elec.describe())
+    #print(elec.describe())
     print(elec.head())
 
     print("KAU")
-    print(kau.describe())
+    #print(kau.describe())
     print(kau.head())
+
+    print("SUM")
+    print(df.head())
 
     #df = pd.concat([wti, elec, kau], ignore_index=True )
     #print(df.head())
