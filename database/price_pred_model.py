@@ -67,19 +67,22 @@ def struct_data(wti, elec, kau):
     #그래서 유가 데이터가 없는 날의 전력 데이터는 없애야 한다.
     df = pd.DataFrame()
 
-    for index, row in wti.iterrows():
-        print(row['date'], row['WTI($/bbl)'])
-        print("=======")
-        print(elec[elec['date']==row['date']].iloc[0, 1])
-        print("*******")
-        print(kau[kau['date']==row['date']].iloc[0, 1])
-        print('')
-        new_row = {'date' : row['date'], 'WTI($/bbl)' : row['WTI($/bbl)'],
-                   'elec': elec[elec['date']==row['date']].iloc[0, 1],
-                   'price' : kau[kau['date']==row['date']].iloc[0, 1]}
-        print(new_row)
-        df.append(new_row, ignore_index=True)
+    for index, row in kau.iterrows() :
+        if not wti[wti['date']==row['date']].empty :
+            #print(wti[wti['date']==row['date']]['WTI($/bbl)'].values[0])
+            new_row = { 'date' : row['date'], 'day' : row['day'], 'price' : row['price'],'WTI($/bbl)' : wti[wti['date']==row['date']]['WTI($/bbl)'].values[0] }
+            df = df.append(new_row, ignore_index=True)
+    df.insert(4,'elec', 0)
+    for index, row in df.iterrows() :
+        if not elec[elec['date']==row['date']].empty :
+            #print(elec[elec['date']==row['date']]['elec'].values[0])
+            #new_row = {'elec' : elec[elec['date']==row['date']]['elec'].values[0]}
+            #df.loc[index]['elec'] = (elec[elec['date']==row['date']]['elec'].values[0])
+            df.loc[index,'elec'] = (elec[elec['date']==row['date']]['elec'].values[0])
 
+    #print(df)
+
+    """
     print("WTI")
     #print(wti.describe())
     print(wti.head())
@@ -98,7 +101,7 @@ def struct_data(wti, elec, kau):
     #df = pd.concat([wti, elec, kau], ignore_index=True )
     #print(df.head())
     #print(df.describe())
-
+    """
 if __name__ == "__main__":
     wti, kau = data_from_csv()
     elec = data_from_xls()
