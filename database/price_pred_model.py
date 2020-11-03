@@ -12,7 +12,35 @@ def data_from_csv():
     wti_after_2015 = wti[wti['date'] > '2015-01-11']
     #print(wti_after_2015.head())
     #print(wti_after_2015.describe())
-    return wti_after_2015
+
+    # KAU
+    kau18 = pd.read_csv('data/KAU18.csv', header=0,
+        names=['date', 'name', 'price', 'diff', 'diff_per', 'high_price',
+        'low_price', 'volume', 'transaction_price', 'weighted_average'])
+    kau18_price = kau18[['date', 'price']]
+    kau18_price.sort_values(by=['date'], ascending=True, inplace=True,
+        kind='mergesort', ignore_index=True)
+    day_count = [i for i in range(kau18_price.count()['date'])]
+    kau18_price['day'] = day_count
+    #print(kau18_price.describe())
+    #print(kau18_price.tail())
+
+
+    kau19 = pd.read_csv('data/KAU19.csv', header=0,
+            names=['date', 'name', 'price', 'diff', 'diff_per', 'high_price',
+            'low_price', 'volume', 'transaction_price', 'weighted_average'])
+    kau19_price = kau19[['date', 'price']]
+    kau19_price.sort_values(by=['date'], ascending=True, inplace=True,
+            kind='mergesort', ignore_index=True)
+    day_count = [i for i in range(kau19_price.count()['date'])]
+    kau19_price['day'] = day_count
+    #print(kau19_price.describe())
+    #print(kau19_price.tail())
+
+    kau1819 = kau18_price.append(kau19_price, ignore_index=True)
+    #print(kau1819)
+
+    return (wti_after_2015, kau1819)
 
 
 def data_from_xls():
@@ -28,14 +56,7 @@ def data_from_xls():
         '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24' ], axis='columns', inplace=True)
     # print(elec_after_2015.head())
 
-    #KAU
-    kau = pd.read_excel('data/KAU_20150112_20201029.xlsx',
-        names=['date', 'price', 'diff', 'diff_per', 'start_price','high_price',
-               'low_price', 'volume', 'transaction_price', 'total_price', 'un', 'un2'])
-    kau.drop(['un', 'un2'], axis='columns', inplace=True)
-    kau_price = kau[['date', 'price']]
-    #print(kau_price.head())
-    return (elec_after_2015, kau_price)
+    return (elec_after_2015)
 
 def scale(df):
     print('')
@@ -79,6 +100,6 @@ def struct_data(wti, elec, kau):
     #print(df.describe())
 
 if __name__ == "__main__":
-    wti = data_from_csv()
-    elec, kau = data_from_xls()
+    wti, kau = data_from_csv()
+    elec = data_from_xls()
     struct_data(wti, elec, kau)
