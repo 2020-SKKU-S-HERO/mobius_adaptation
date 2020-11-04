@@ -79,30 +79,23 @@ def struct_data(wti, elec, kau):
             #new_row = {'elec' : elec[elec['date']==row['date']]['elec'].values[0]}
             #df.loc[index]['elec'] = (elec[elec['date']==row['date']]['elec'].values[0])
             df.loc[index,'elec'] = (elec[elec['date']==row['date']]['elec'].values[0])
-
-    #print(df)
-
-    """
-    print("WTI")
-    #print(wti.describe())
-    print(wti.head())
-
-    print("ELEC")
-    #print(elec.describe())
-    print(elec.head())
-
-    print("KAU")
-    #print(kau.describe())
-    print(kau.head())
-
-    print("SUM")
-    print(df.head())
-
-    #df = pd.concat([wti, elec, kau], ignore_index=True )
-    #print(df.head())
+    return df
     #print(df.describe())
-    """
+    #print(df.info())
+
+from keras.models import Sequential
+from keras.layers import Dense
+def build_model():
+    model = keras.Sequential()
+    model.add(Dense(16, input_dim = 3, activation='relu'))
+    model.add(Dense(8, activation='relu'))
+    model.add(Dense(4, activation='relu'))
+    model.add(Dense(1, activation='sigmoid'))
+
+
+
+
 if __name__ == "__main__":
     wti, kau = data_from_csv()
     elec = data_from_xls()
-    struct_data(wti, elec, kau)
+    data = struct_data(wti, elec, kau)
